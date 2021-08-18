@@ -5,7 +5,7 @@ public class InputListener : MonoBehaviour
     [SerializeField] private Events events = default;
     [SerializeField] private GameState gameState = default;
 
-    private Piece activePiece = default;
+    private Piece activePiece;
 
     private void OnEnable()
     {
@@ -33,7 +33,7 @@ public class InputListener : MonoBehaviour
     {
         if (activePiece != null)
         {
-            gameState.MovePiece(activePiece, position);
+            gameState.MovePiece(activePiece.transform.position, position);
             activePiece.Deselect();
             activePiece = null;
         }
