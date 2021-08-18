@@ -104,6 +104,13 @@
       },
       "url": "https://packages.unity.com"
     },
+    "io.realm.unity": {
+      "version": "10.3.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://registry.npmjs.org"
+    },
     "com.unity.modules.ai": {
       "version": "1.0.0",
       "depth": 0,
