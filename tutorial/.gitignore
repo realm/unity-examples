@@ -1,0 +1,3 @@
+# Ghostwriter creates backup files for the mark down files that are currently open. Those do not have to be added to Git.
+*.backup
+
