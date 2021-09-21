@@ -36,6 +36,7 @@ public class GameState : MonoBehaviour
 
     private void Awake()
     {
+        Debug.Log(RealmConfiguration.DefaultConfiguration.DatabasePath);
         realm = Realm.GetInstance();
         pieceEntities = realm.All<PieceEntity>();
 

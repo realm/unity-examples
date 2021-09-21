@@ -1,8 +1,13 @@
-﻿using Realms;
+﻿using MongoDB.Bson;
+using Realms;
 using UnityEngine;
 
 public class PieceEntity : RealmObject
 {
+    [PrimaryKey]
+    [MapTo("_id")]
+    public ObjectId Id { get; set; } = ObjectId.GenerateNewId();
+
     // An `enum` cannot be saved directly in Realm, we need to use a type that can be saved which in this case is an `int`.
     public PieceType PieceType
     {
