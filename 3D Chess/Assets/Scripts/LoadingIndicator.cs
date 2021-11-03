@@ -2,35 +2,23 @@ using UnityEngine;
 
 public class LoadingIndicator : MonoBehaviour
 {
-    [SerializeField] private float maxLeft = 0;
-    [SerializeField] private float maxRight = 0;
-    [SerializeField] private float speed = 100;
+    // 1
+    [SerializeField] private float maxMovement = 100;
+    [SerializeField] private float speed = 200;
 
-    private enum MovementDirection { None, Left, Right }
-    private MovementDirection movementDirection = MovementDirection.Left;
+    // 2
+    private Vector3 movementDirection = Vector3.left;
 
     private void Update()
     {
-        switch (movementDirection)
+        transform.Translate(movementDirection * speed * Time.deltaTime);
+        // 3
+        if (Mathf.Abs(transform.localPosition.x) >= maxMovement)
         {
-            case MovementDirection.None:
-                break;
-            case MovementDirection.Left:
-                transform.Translate(speed * Time.deltaTime * Vector3.left);
-                if (transform.localPosition.x <= maxLeft)
-                {
-                    transform.localPosition = new Vector3(maxLeft, transform.localPosition.y, transform.localPosition.z);
-                    movementDirection = MovementDirection.Right;
-                }
-                break;
-            case MovementDirection.Right:
-                transform.Translate(speed * Time.deltaTime * Vector3.right);
-                if (transform.localPosition.x >= maxRight)
-                {
-                    transform.localPosition = new Vector3(maxRight, transform.localPosition.y, transform.localPosition.z);
-                    movementDirection = MovementDirection.Left;
-                }
-                break;
+            // 4
+            Mathf.Clamp(transform.localPosition.x, -maxMovement, maxMovement);
+            // 5
+            movementDirection = -movementDirection;
         }
     }
 }
