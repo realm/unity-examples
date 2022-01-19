@@ -317,6 +317,9 @@ GameObject:
   - component: {fileID: 1910535686}
   - component: {fileID: 1910535690}
   - component: {fileID: 1910535685}
+  - component: {fileID: 1910535693}
+  - component: {fileID: 1910535692}
+  - component: {fileID: 1910535691}
   m_Layer: 0
   m_Name: Capsule
   m_TagString: Untagged
@@ -459,3 +462,50 @@ MonoBehaviour:
   hitCountUnmodified: 124
   hitCountShift: 15
   hitCountControl: 0
+--- !u!114 &1910535691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1910535675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a629ce22c3b1c64482e972673e6c660, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitCount: 0
+--- !u!114 &1910535692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1910535675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c67101b5f0d25841bd39a13f3b027a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitCountFileWriteAllText: 0
+  hitCountFileWriteAllLines: 0
+  hitCountFileStream: 0
+  hitCountStreamWriter: 0
+  hitCountStreamWriterFileStream: 0
+--- !u!114 &1910535693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1910535675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42c80905144f95f4384cf2038c0c64ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitCountFileWriteAllText: 0
+  hitCountFileWriteAllLines: 0
+  hitCountFileStream: 0
+  hitCountStreamWriter: 0
+  hitCountStreamWriterFileStream: 0
