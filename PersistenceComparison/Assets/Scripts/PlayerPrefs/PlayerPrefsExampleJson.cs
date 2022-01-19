@@ -22,16 +22,16 @@ public class PlayerPrefsExampleJson : MonoBehaviour
     [SerializeField] private int hitCountControl = 0;
 
     // 3
-    private readonly string hitCountKey = "HitCountKeyJson";
+    private const string HitCountKey = "HitCountKeyJson";
 
     private void Start()
     {
         // 4
         // Check if the key exists. If not, we never saved to it.
-        if (PlayerPrefs.HasKey(hitCountKey))
+        if (PlayerPrefs.HasKey(HitCountKey))
         {
             // 5
-            string jsonString = PlayerPrefs.GetString(hitCountKey);
+            string jsonString = PlayerPrefs.GetString(HitCountKey);
             HitCount hitCount = JsonUtility.FromJson<HitCount>(jsonString);
 
             // 6
@@ -70,7 +70,7 @@ public class PlayerPrefsExampleJson : MonoBehaviour
 
         // 12
         string jsonString = JsonUtility.ToJson(hitCount);
-        PlayerPrefs.SetString(hitCountKey, jsonString);
+        PlayerPrefs.SetString(HitCountKey, jsonString);
         PlayerPrefs.Save();
     }
 }

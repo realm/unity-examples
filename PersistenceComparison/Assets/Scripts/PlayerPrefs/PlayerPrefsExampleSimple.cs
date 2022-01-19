@@ -7,15 +7,15 @@ public class PlayerPrefsExampleSimple : MonoBehaviour
 
     [SerializeField] private int hitCount = 0;
 
-    private readonly string hitCountKey = "HitCountKey"; // 1
+    private const string HitCountKey = "HitCountKey"; // 1
 
     private void Start()
     {
         // Check if the key exists. If not, we never saved the hit count before.
-        if (PlayerPrefs.HasKey(hitCountKey)) // 2
+        if (PlayerPrefs.HasKey(HitCountKey)) // 2
         {
             // Read the hit count from the PlayerPrefs.
-            hitCount = PlayerPrefs.GetInt(hitCountKey); // 3
+            hitCount = PlayerPrefs.GetInt(HitCountKey); // 3
         }
     }
 
@@ -24,7 +24,7 @@ public class PlayerPrefsExampleSimple : MonoBehaviour
         hitCount++;
 
         // Set and save the hit count before ending the game.
-        PlayerPrefs.SetInt(hitCountKey, hitCount); // 4
+        PlayerPrefs.SetInt(HitCountKey, hitCount); // 4
         PlayerPrefs.Save(); // 5
     }
 

@@ -11,9 +11,9 @@ public class PlayerPrefsExampleExtended : MonoBehaviour
     [SerializeField] private int hitCountControl = 0;
 
     // 2
-    private readonly string HitCountKeyUnmodified = "HitCountKeyUnmodified";
-    private readonly string HitCountKeyShift = "HitCountKeyShift";
-    private readonly string HitCountKeyControl = "HitCountKeyControl";
+    private const string HitCountKeyUnmodified = "HitCountKeyUnmodified";
+    private const string HitCountKeyShift = "HitCountKeyShift";
+    private const string HitCountKeyControl = "HitCountKeyControl";
 
     private void Start()
     {
