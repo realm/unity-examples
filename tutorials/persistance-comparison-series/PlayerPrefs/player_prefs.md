@@ -8,7 +8,7 @@ Persisting data is an important of most games. Unity offers only a limited set o
 In this tutorial series we will explore the options given to us by Unity and third party libraries. Each part will take a deeper look into one of them with the final part being a comparison:
 
 - Part 1: PlayerPrefs *(this tutorial)*
-- Part 2: Files and FileStreams *(coming soon)*
+- Part 2: Files *(coming soon)*
 - Part 3: BinaryReader and BinaryWriter
 - Part 4: SQL
 - Part 5: Realm Unity SDK
@@ -347,6 +347,12 @@ Compared to before you see that checking the key and increasing the counter (7 -
 First, we need to create a new `HitCount` object (11) and assign the three counts. Using `JsonUtility.ToJson()` we can then (12) create a JSON string from this object and set it using the `PlayerPrefs`.
 
 Remember to also call `Save()` here to make sure data cannot get lost in case the game crashes without being able to call `OnApplicationQuit()`.
+
+Run the game and after you clicked the capsule a couple of time with or without Shift and Control, have a look at the result. The following screenshot shows the Windows registry which is where the `PlayerPrefs` get saved.
+
+The location is `HKEY_CURRENT_USER\SOFTWARE\Unity\UnityEditor\MongoDB Inc.\UnityPersistenceExample` and as you can see our JSON is right there, saved in plain text. Which is also one of the big down sides to keep in mind when using `PlayerPrefs`: data is not save and can easily be edited.
+
+<img src="images/06_json_in_registry.jpg" alt="JSON in registry"/>
 
 ## Conclusion
 
