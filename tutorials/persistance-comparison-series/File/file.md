@@ -1,22 +1,24 @@
-# Saving Data in Unity3D using PlayerPrefs
-<b>(Part 1 of the Persistence Comparison Series)</b>
+# Saving Data in Unity3D using Files
+<b>(Part 2 of the Persistence Comparison Series)</b>
 
 ## Introduction
 
-Persisting data is an important of most games. Unity offers only a limited set of solutions which means we have to look around for other options as well.
+Persisting data is an important part of most games. Unity offers only a limited set of solutions which means we have to look around for other options as well.
 
-In this tutorial series we will explore the options given to us by Unity and third party libraries. Each part will take a deeper look into one of them with the final part being a comparison:
+In Part 1 of this series we explored Unity's own solution: `PlayerPrefs`. This time we look into one of the ways we can use the underlying .NET framework by saving files. Here is an overview of the complete series:
 
-- Part 1: PlayerPrefs *(this tutorial)*
-- Part 2: Files and FileStreams *(coming soon)*
-- Part 3: BinaryReader and BinaryWriter
+- Part 1: [PlayerPrefs](https://github.com/realm/unity-examples/blob/persistence-comparison/tutorials/persistance-comparison-series/PlayerPrefs/player_prefs.md)
+- Part 2: Files *(this tutorial)*
+- Part 3: BinaryReader and BinaryWriter *(coming soon)*
 - Part 4: SQL
 - Part 5: Realm Unity SDK
 - Part 6: Comparison of all those options
 
-To make it easier to follow along we have prepared an example repository for you. All those examples can be found within the same Unity project since they all use the same example game so you can see the differences between those persistence approaches better.
+Like part 1 this tutorial can also be found in the https://github.com/realm/unity-examples repository on the [persistence-comparison](https://github.com/realm/unity-examples/tree/persistence-comparison) branch.
 
-The repository can be found at https://github.com/realm/unity-examples with this tutorial being on the [persistence-comparison](https://github.com/realm/unity-examples/tree/persistence-comparison) branch next to other tutorials we have prepared for you.
+<img src="images/00_project_structure.jpg" alt="Capsule in scene" width="250"/>
+
+Each part is sorted into a folder, the three scripts we will be looking at are in the `File` sub folder. But first let's look at the example game itself and what we have to prepare in Unity before we can jump into the actual coding.
 
 ## Example game
 
@@ -73,189 +75,191 @@ Whenever the game starts (2) we want to read the current hit count from the pers
 
 The second part to this is saving changes which we want to do whenever we register a mouse click. The Unity message for this is `OnMouseDown()` (4). This method gets called every time the `GameObject` that this script is attached to is clicked (with a left mouse click). In this case we increment the `hitCount` (5) which will eventually be saved by the various options shown in this tutorials series.
 
-## PlayerPrefs
+## File
 
-The easiest and probably most straight forward way to save data in Unity is using the built in [`PlayerPrefs`](https://docs.unity3d.com/ScriptReference/PlayerPrefs.html). The downside however is the limited usability since only three data types are supported:
+(see `FileExampleSimple.cs` in the repository for the finished version)
 
-- string
-- float
-- integer
+One of the ways the .NET framework offers us to save data is using the [`File` class](https://docs.microsoft.com/en-us/dotnet/api/system.io.file?view=net-5.0):
 
-Another important fact about them is that they save data in plain text which means a player can easily change their content. `PlayerPrefs` should therefore only be used for things like graphic settings, user names and other data that could be changed in game anyway and therefore does not need to be safe.
+> Provides static methods for the creation, copying, deletion, moving, and opening of a single file, and aids in the creation of FileStream objects.
 
-Depending on the operating system the game is running on the `PlayerPrefs` get saved in different locations. They are all [listed in the documentation](https://docs.unity3d.com/ScriptReference/PlayerPrefs.html), Windows for example uses the registry to save the data under `HKCU\Software\ExampleCompanyName\ExampleProductName`
+Besides that the `File` class is also used to manipulate the file itself, reading and writing data. On top of that if offers ways to read meta data of a file like time of creation.
 
-The usage of `PlayerPrefs` is basically the same as a dictionary. They get accessed as `key`/`value` pairs where the `key` is of type `string`. Each supported data type has its own function:
+When working with a file you can also make use of several options to change `FileMode` or `FileAccess.`
 
-- SetString(key, value)
-- GetString(key)
-- SetFloat(key, value)
-- GetFloat(key)
-- SetInt(key, value)
-- GetInt(key)
+The `FileStream` mentioned in the documentation is another approach to work with those files, providing additional options. In this tutorial we will just use the plain `File` class.
+
+Let's have a look at what we have to change in the example presented in the previous section to save the data using `File`:
 
 ```cs
+using System;
+using System.IO;
 using UnityEngine;
 
-public class PlayerPrefsExampleSimple : MonoBehaviour
+public class FileExampleSimple : MonoBehaviour
 {
     // Resources:
-    // https://docs.unity3d.com/ScriptReference/PlayerPrefs.html
+    // https://docs.microsoft.com/en-us/dotnet/api/system.io.file?view=net-5.0
 
     [SerializeField] private int hitCount = 0;
 
-    private readonly string hitCountKey = "HitCountKey"; // 1
+    private const string HitCountFile = "hitCountFile.txt"; // 1
 
-    private void Start()
+    private void Start() // 5
     {
-        // Check if the key exists. If not, we never saved the hit count before.
-        if (PlayerPrefs.HasKey(hitCountKey)) // 2
+        if (File.Exists(HitCountFile)) // 6
         {
-            // Read the hit count from the PlayerPrefs.
-            hitCount = PlayerPrefs.GetInt(hitCountKey); // 3
+            string textFileWriteAllText = File.ReadAllText(HitCountFile); // 7
+            hitCount = Int32.Parse(textFileWriteAllText); // 8
         }
     }
 
-    private void OnMouseDown()
+    private void OnMouseDown() // 2
     {
-        hitCount++;
+        hitCount++; // 3
 
-        // Set and save the hit count before ending the game.
-        PlayerPrefs.SetInt(hitCountKey, hitCount); // 4
-        PlayerPrefs.Save(); // 5
+        // The easiest way when working with Files is to use them directly.
+        // This writes all input at once and overwrites a file if executed again.
+        // The File is opened and closed right away.
+        File.WriteAllText(HitCountFile, hitCount.ToString()); // 4
     }
 
 }
-
 ```
 
-For the `PlayerPrefs` example we create a script named `PlayerPrefsExample` based on the `HitCountExample` shown earlier.
+First we define a name for the file that will hold the data (1). If no additional path is provided the file will just be saved in the project folder when running the game in the Unity editor or the game folder when running a build. This is fine for the example.
 
-In addition to the basic structure we also need to define a key (1) that will be used to save the `hitCount` in the `PlayerPrefs`, let's call it `"HitCountKey"`.
+Whenever we click on the capsule (2) and increment the hit count (3) we need to save that change. Using `File.WriteAllText()` (4) the file will be opened, data will be saved and it will be closed right away. Besides the file name this function expects the contents as a string. Therefore we have to transform the `hitCount` by calling `ToString()` before passing it on.
 
-When the game starts we first want to check if there was already a hit count saved. The `PlayerPrefs` have a built-in function `HasKey(hitCountKey)` (2) that let's us achieve exactly this. If the key exists we read it using `GetInt(hitCountKey)` (3) and save it in the counter.
+The next time we start the game (5) we want to load the previously saved data. First we check if the file already exists (6). If it does not exist we did never save before and can just keep the default value for `hitCount`. If the file exists we use `ReadAllText()` to get that data (7). Since this is a string again, we need to convert here as well using `Int32.Parse()` (8). Note that this means we have to be sure about what we read. If the structure of the file changes or the player edits it this might lead to problems during the parsing of the file.
 
-The second part is saving data whenever it changes. On each click after we incremented the `hitCount` we have to call `SetInt(key, value)` on `PlayerPrefs` (4) to set the new data. Note that this does not save the data to disk. This only happens during `OnApplicationQuit()` implicitly. We can explicitly write the data to disk at any time to avoid loosing data in case the game crashes and `OnApplicationQuit()` never gets called.
-To write the data to disk we call `Save()` (5).
+Let's look into extending this simple example in the next section.
 
 ## Extended example
 
-In the second part of this tutorial we will extend this very simple version to look at ways to save more complex data within `PlayerPrefs`.
+(see `FileExampleExtended.cs` in the repository for the finished version)
 
-Instead of just detecting a mouse click the extended script will detect `Shift+Click` and `Ctrl+Click` as well.
+The previous section has shown the most simple example, using just one variable that needs to be saved. What if we want to save more than that?
 
-Again, to visualize this in the editor we will add some more `[SerializeFields]` (1). Substitute the current one (`hitCount`) with the following:
+Depending on what needs to saved there are several different approaches. You could use multiple files or you can write multiple lines inside the same file. The latter shall be shown in this section by extending the game to recognize modifier keys. We want to detect normal clicks, Shift+Click and Control+Click.
+
+First, update the hit counts so that we can save three of them:
 
 ```cs
-// 1
 [SerializeField] private int hitCountUnmodified = 0;
 [SerializeField] private int hitCountShift = 0;
 [SerializeField] private int hitCountControl = 0;
 ```
 
-Each type of click will be shown in its own `Inspector` element.
-
-The same has to be done for the `PlayerPrefs` keys. Remove the `HitCountKey` and add three new elements (2).
+We also want to use a different file name so we can look at both version next to each other:
 
 ```cs
-// 2
-private readonly string HitCountKeyUnmodified = "HitCountKeyUnmodified";
-private readonly string HitCountKeyShift = "HitCountKeyShift";
-private readonly string HitCountKeyControl = "HitCountKeyControl";
+private const string HitCountFileUnmodified = "hitCountFileExtended.txt";
 ```
 
-There are many different ways to save more complex data. Here we will be using three different entries in `PlayerPrefs` as a first step. Later we will also look at how we can save structured data that belongs together in a different way.
-
-When starting the scene the loading looks very similar just extended by two more calls:
+The last field we need to define is the key that is pressed:
 
 ```cs
-private void Start()
-{
-    // Check if the key exists. If not, we never saved the hit count before.
-    if (PlayerPrefs.HasKey(HitCountKeyUnmodified)) // 3
-    {
-        // Read the hit count from the PlayerPrefs.
-        hitCountUnmodified = PlayerPrefs.GetInt(HitCountKeyUnmodified); // 4
-    }
-    if (PlayerPrefs.HasKey(HitCountKeyShift)) // 3
-    {
-        // Read the hit count from the PlayerPrefs.
-        hitCountShift = PlayerPrefs.GetInt(HitCountKeyShift); // 4
-    }
-    if (PlayerPrefs.HasKey(HitCountKeyControl)) // 3
-    {
-        // Read the hit count from the PlayerPrefs.
-        hitCountControl = PlayerPrefs.GetInt(HitCountKeyControl); // 4
-    }
-}
+private KeyCode keyPressed = default;
 ```
 
-As before, we first check if the key exists in the `PlayerPrefs` (3) and if so, we set the corresponding counter (4) to its value. This is fine for a simple example but here you can already see that saving more complex data will bring `PlayerPrefs` very soon to its limits if you do not want to write a lot of boilerplate code.
+The first thing we need to do is check if a key was pressed and which key it was. Unity offers an easy way to achieve this using the [`Input`](https://docs.unity3d.com/ScriptReference/Input.html) class's `GetKey` function. It checks if the given key was pressed or not. You can pass in the string for the key or to be a bit more safe, just use the `KeyCode` enum. We cannot use this in the `OnMouseClick()` when detecting the mouse click though:
 
-The same triplet can then also be found in the click detection:
+> Note: Input flags are not reset until Update. You should make all the Input calls in the Update Loop.
+
+Add a new method called `Update()` (1) which is called in every frame. Here we need to check if the `Shift` or `Control` key was pressed (2) and if so, save the corresponding key in `keyPressed` (3). In case none of those keys was pressed (4) we consider it unmodified and reset `keyPressed` to its `default` (5).
 
 ```cs
-private void OnMouseDown()
+private void Update() // 1
 {
     // Check if a key was pressed.
-    if (Input.GetKey(KeyCode.LeftShift)) // 5
+    if (Input.GetKey(KeyCode.LeftShift)) // 2
     {
-        // Increment the hit count and set it to PlayerPrefs.
-        hitCountShift++; // 6
-        PlayerPrefs.SetInt(HitCountKeyShift, hitCountShift); // 9
+        // Set the LeftShift key.
+        keyPressed = KeyCode.LeftShift; // 3
     }
-    else if (Input.GetKey(KeyCode.LeftControl)) // 5
+    else if (Input.GetKey(KeyCode.LeftControl)) // 2
     {
-        // Increment the hit count and set it to PlayerPrefs.
-        hitCountControl++; // 
-        PlayerPrefs.SetInt(HitCountKeyControl, hitCountControl); // 9
+        // Set the LeftControl key.
+        keyPressed = KeyCode.LeftControl; // 3
     }
-    else // 7
+    else // 4
     {
-        // Increment the hit count and set it to PlayerPrefs.
-        hitCountUnmodified++; // 8
-        PlayerPrefs.SetInt(HitCountKeyUnmodified, hitCountUnmodified); // 9
+        // In any other case reset to default and consider it unmodified.
+        keyPressed = default; // 5
     }
-
-    // Persist the data to disk.
-    PlayerPrefs.Save(); // 10
 }
 ```
 
-Unity offers a detection for keyboard clicks and other input like a controller or the mouse via a class called [`Input`](https://docs.unity3d.com/ScriptReference/Input.html). Using `GetKey` we can check if a specific key was held down the moment we register a mouse click.
+Now to saving the data when a click happens:
 
-The keys can be addressed via their name as string but the type safe way to do this is to use the class `KeyCode` which defines every key necessary. For our case this would be `KeyCode.LeftShift` and `KeyCode.LeftControl`.
+```cs
+private void OnMouseDown() // 6
+{
+    // Check if a key was pressed.
+    if (keyPressed == KeyCode.LeftShift) // 7
+    {
+        // Increment the Shift hit count.
+        hitCountShift++; // 8
+    }
+    else if (keyPressed == KeyCode.LeftControl) // 7
+    {
+        // Increment the Control hit count.
+        hitCountControl++; // 8
+    }
+    else // 9
+    {
+        // If neither Shift nor Control was held, we increment the unmodified hit count.
+        hitCountUnmodified++; // 10
+    }
 
-First we check if one of those two was held down while the click happened (5) and if so, increment the corresponding hit counter (6). If not (7), the `unmodfied` counter can be incremented (8).
+    // 11
+    // Create a string array with the three hit counts.
+    string[] stringArray = {
+        hitCountUnmodified.ToString(),
+        hitCountShift.ToString(),
+        hitCountControl.ToString()
+    };
 
-Finally, we need to set each of those three counters individually (9) via `PlayerPrefs.SetInt` using the three keys we defined above.
+    // 12
+    // Save the entries, line by line.
+    File.WriteAllLines(HitCountFileUnmodified, stringArray);
+}
+```
 
-Like in the simple example, we also call `Save()` (10) at the end to make sure, data does not get lost if the game does not end normally.
+Whenever a mouse click is detected on the capsule (6) we can then perform a similar check to what happened in `Update()` only that we use `keyPressed` instead of `Input.GetKey()` here.
 
-When switching back to the Unity editor they script on the capsule should now look like this:
+Check if `keyPressed` was set to `KeyCode.LeftShift` or `KeyCode.LeftControl` (7) and if so, increment the corresponding hit count (8). If no modifier was used (9), increment the `hitCountUnmodified`.
 
-<img src="images/05_extended_version.jpg" alt="Extended example" width="500"/>
+As seen in the last section we need to create a string that can be saved in the file. There is a second function on `File` that accepts a a string array and then saves each entry in one line: `WriteAllLines()`.
 
-You can find the finished version of the extended example in the repository under `PersistenceComparison\Assets\Scripts\PlayerPrefsExampleExtended.cs`
+Knowing this we create an array containing the three hit counts (11) and pass this one on to `File.WriteAllLines()`.
+
+Start the game, click the capsule using Shift and Control. You should see the three counters in the Inspector.
+
+<img src="images/07_hit_count_extended_editor.jpg" alt="File hitCountExtended.txt" width=""/>
+
+After stopping the game and therefore saving the data a new file `hitCountFileExtended.txt` should exist in your project folder. Have look at it, it should look something like this:
+
+<img src="images/08_hit_count_extended_file.jpg" alt="File hitCountExtended.txt" width=""/>
+
+As long as all the data saved to those lines belongs together, the file can be one option. If you have several different properties you might create multiple files. Alternatively you can save all the data into the same file using a bit of structure. One of the possible approaches to structuring your data will be shown in the next section.
 
 ## More complex data
 
-In the previous two sections we have seen how to handle two simple examples of persisting data in `PlayerPrefs`. What if they get more complex than that? What if you want to structure and group data together?
+(see `FileExampleJson.cs` in the repository for the finished version)
 
-One possible approach would be to use the fact that `PlayerPrefs` can hold a `string` and save a `JSON` in there.
+JSON is a very common approach when saving structured data. It's easy to use and there are framework for almost any language. The .NET framework provides a [`JsonSerializer`](https://docs.microsoft.com/en-us/dotnet/api/system.text.json.jsonserializer?view=net-6.0). Unity has it's own version of it: [`JsonUtility`](https://docs.unity3d.com/ScriptReference/JsonUtility.html)
 
-You can find `PlayerPrefsExampleJson` in the example repository as well. Let's have a look at it in a moment!
+As you can see in the documentation the functionality boils down to these three methods:
 
-First we need to figure out how to actually transform our data into JSON. The .NET framework as well as the `UnityEngine` framework offer a JSON serialize and deserializer to do this job for us. Both behave very similar but we will use Unity's own [`JsonUtility`](https://docs.unity3d.com/ScriptReference/JsonUtility.html) which [performs better in Unity than other similar JSON solution](https://docs.unity3d.com/Manual/JSONSerialization.html).
+- *FromJson*: Create an object from its JSON representation.
+- *FromJsonOverwrite*: Overwrite data in an object by reading from its JSON representation.
+- *ToJson*: Generate a JSON representation of the public fields of an object.
 
-To transform data to JSON we first need to create a container object. This has [some restriction](https://docs.unity3d.com/ScriptReference/JsonUtility.ToJson.html):
-
-> Internally, this method uses the Unity serializer; therefore the object you pass in must be supported by the serializer: it must be a MonoBehaviour, ScriptableObject, or plain class/struct with the Serializable attribute applied. The types of fields that you want to be included must be supported by the serializer; unsupported fields will be ignored, as will private fields, static fields, and fields with the NonSerialized attribute applied.
-
-In our case, since we are only saving simple data types (int) for now that's fine. We can define a new class (1) and call it `HitCount`:
+The `JsonUtility` transforms JSON into objects and back. Therefore our first change to the previous section is to define such an object with public fields:
 
 ```cs
-// 1
 private class HitCount
 {
     public int Unmodified;
@@ -264,98 +268,78 @@ private class HitCount
 }
 ```
 
-We will keep the Unity editor outlets the same (2):
+The class itself can be `private` and just be added inside the `FileExampleJson` class but its fields need to be public.
+
+As before we use a different file to save this data. Update the filename to:
 
 ```cs
-// 2
-[SerializeField] private int hitCountUnmodified = 0;
-[SerializeField] private int hitCountShift = 0;
-[SerializeField] private int hitCountControl = 0;
+private const string HitCountFileJson = "hitCountFileJson.txt";
 ```
 
-All those will eventually be saved into the same `PlayerPrefs` field which means we only need one key (3):
+When saving the data we will use the same `Update()` method as before to detect which key was pressed.
 
-```cs
-// 3
-private readonly string hitCountKey = "HitCountKeyJson";
-```
-
-In `Start()` we then need to read the JSON. As before, we check if the `PlayerPrefs` key exists (4) and then read the data, this time using `GetString()` (as opposed to `GetInt()` before).
-
-Transforming this JSON into the actual object is then done using `JsonUtility.FromJson()` (5) which takes the string as an argument. It's a generic function and we need to provide the information about which object this JSON is supposed to be representing, in this case `HitCount`.
-
-If the JSON could be read and transformed successfully we can set the hit count fields (6) to their three values.
-
-```cs
-private void Start()
-{
-    // 4
-    // Check if the key exists. If not, we never saved to it.
-    if (PlayerPrefs.HasKey(hitCountKey))
-    {
-        // 5
-        string jsonString = PlayerPrefs.GetString(hitCountKey);
-        HitCount hitCount = JsonUtility.FromJson<HitCount>(jsonString);
-
-        // 6
-        if (hitCount != null)
-        {
-            hitCountUnmodified = hitCount.Unmodified;
-            hitCountShift = hitCount.Shift;
-            hitCountControl = hitCount.Control;
-        }
-    }
-}
-```
-
-In a very similar fashion `OnMouseDown()` needs to save the data whenever it's changed.
+The first part of `OnMouseDown()` (1) can stay the same as well since this part only increments the hit count in depending on the modifier used.
 
 ```cs
 private void OnMouseDown()
 {
-    if (Input.GetKey(KeyCode.LeftShift)) // 7
+    // 1
+    // Check if a key was pressed.
+    if (keyPressed == KeyCode.LeftShift)
     {
-        // Increment the hit count and set it to PlayerPrefs.
-        hitCountShift++; // 8
+        // Increment the Shift hit count.
+        hitCountShift++;
     }
-    else if (Input.GetKey(KeyCode.LeftControl)) // 7
+    else if (keyPressed == KeyCode.LeftControl)
     {
-        // Increment the hit count and set it to PlayerPrefs.
-        hitCountControl++; // 8
+        // Increment the Control hit count.
+        hitCountControl++;
     }
-    else // 9
+    else
     {
-        // Increment the hit count and set it to PlayerPrefs.
-        hitCountUnmodified++; // 10
+        // If neither Shift nor Control was held, we increment the unmodified hit count.
+        hitCountUnmodified++;
     }
 
-    // 11
+    // 2
+    // Create a new HitCount object to hold this data.
     HitCount hitCount = new();
     hitCount.Unmodified = hitCountUnmodified;
     hitCount.Shift = hitCountShift;
     hitCount.Control = hitCountControl;
 
-    // 12
-    string jsonString = JsonUtility.ToJson(hitCount);
-    PlayerPrefs.SetString(hitCountKey, jsonString);
-    PlayerPrefs.Save();
+    // 3
+    // Create a JSON using the HitCount object.
+    string jsonString = JsonUtility.ToJson(hitCount, true);
+
+    // 4
+    // Save the json to the file.
+    File.WriteAllText(HitCountFileJson, jsonString);
 }
 ```
 
-Compared to before you see that checking the key and increasing the counter (7 - 10) is basically unchanged except for the save part that is now a bit different.
+However, we need to update the second part. Instead of a string array we create a new `HitCount` object and set the three public fields to the values of the hit counters (2).
 
-First, we need to create a new `HitCount` object (11) and assign the three counts. Using `JsonUtility.ToJson()` we can then (12) create a JSON string from this object and set it using the `PlayerPrefs`.
+Using `JsonUtility.ToJson()` we can transform this object to a string (3). If you pass in `true` for the second, optional parameter `prettyPrint` the string will be formatted in a nicely readable way.
 
-Remember to also call `Save()` here to make sure data cannot get lost in case the game crashes without being able to call `OnApplicationQuit()`.
+Finally, as in `FileExampleSimple.cs` we just use `WriteAllText()` since we're only saving one string, not an array.
+
+When you run the game you will the that in the editor it looks identical to the previous section since we are using the same three counters. If you open the file `hitCountFileJson.txt` you should then see the three counters in a nicely formatted JSON.
+
+<img src="images/09_hit_count_extended_json.jpg" alt="File hitCountExtended.txt" width=""/>
 
 ## Conclusion
 
-In this tutorial we have seen how to save and load data using `PlayerPrefs`. They are very simple and easy to use and a great choice for some simple data points. If it gets a bit more complex, you can save data using multiple fields or wrapping them into an object which can then be serialized using `JSON`.
+In this tutorial we learned how to utilize `File` to save data. `JsonUtility` helps structure this data. They are simple and easy to use, not much code is required.
 
-What happens if you want to persist multiple objects of the same class? Or multiple classes? Maybe with relationships between them? And what if the structure of those objects changes?
+What are the down sides though?
 
-As you see, `PlayerPrefs` get to their limits really fast. As easy as they are to use as limited they are.
+First of, we open, write to and save the file every single time the capsule it clicked. While not a problem in this case and certainly applicable for some games this will not perform very well when many save operations are made.
 
-In future tutorials we will explore other options to persist data in Unity and how they can solve some or all of the above questions.
+Also, the data is saved in plain text and can easily be edited by the player.
+
+The more complex your data is, the more complex it will be to actually maintain this approach. What if the structure of the `HitCount` object changes? You have to change account for that when loading an older version of the JSON. Migrations are necessary.
+
+In the following tutorials we will (among others) have a look at how databases can make this job a lot easier and take care of the problems we face here.
 
 Please provide feedback and ask any questions in the [Realm Community Forum](https://www.mongodb.com/community/forums/tags/c/realm/realm-sdks/58/unity).

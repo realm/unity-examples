@@ -19,6 +19,8 @@ public class FileExampleJson : MonoBehaviour
     [SerializeField] private int hitCountShift = 0;
     [SerializeField] private int hitCountControl = 0;
 
+    private KeyCode keyPressed = default;
+
     private const string HitCountFileJson = "hitCountFileJson.txt";
 
     private void Start()
@@ -37,15 +39,36 @@ public class FileExampleJson : MonoBehaviour
         }
     }
 
-    private void OnMouseDown()
+    private void Update()
     {
         // Check if a key was pressed.
         if (Input.GetKey(KeyCode.LeftShift))
         {
+            // Set the LeftShift key.
+            keyPressed = KeyCode.LeftShift;
+        }
+        else if (Input.GetKey(KeyCode.LeftControl))
+        {
+            // Set the LeftControl key.
+            keyPressed = KeyCode.LeftControl;
+        }
+        else
+        {
+            // In any other case reset to default and consider it unmodified.
+            keyPressed = default;
+        }
+    }
+
+    private void OnMouseDown()
+    {
+        // 1
+        // Check if a key was pressed.
+        if (keyPressed == KeyCode.LeftShift)
+        {
             // Increment the Shift hit count.
             hitCountShift++;
         }
-        else if (Input.GetKey(KeyCode.LeftControl))
+        else if (keyPressed == KeyCode.LeftControl)
         {
             // Increment the Control hit count.
             hitCountControl++;
@@ -63,7 +86,7 @@ public class FileExampleJson : MonoBehaviour
         hitCount.Control = hitCountControl;
 
         // Create a JSON using the HitCount object.
-        string jsonString = JsonUtility.ToJson(hitCount);
+        string jsonString = JsonUtility.ToJson(hitCount, true);
 
         // Save the json to the file.
         File.WriteAllText(HitCountFileJson, jsonString);

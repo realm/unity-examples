@@ -11,6 +11,8 @@ public class FileExampleExtended : MonoBehaviour
     [SerializeField] private int hitCountShift = 0;
     [SerializeField] private int hitCountControl = 0;
 
+    private KeyCode keyPressed = default;
+
     private const string HitCountFileUnmodified = "hitCountFileExtended.txt";
 
     private void Start()
@@ -32,32 +34,54 @@ public class FileExampleExtended : MonoBehaviour
         }
     }
 
-    private void OnMouseDown()
+    private void Update() // 1
     {
         // Check if a key was pressed.
-        if (Input.GetKey(KeyCode.LeftShift))
+        if (Input.GetKey(KeyCode.LeftShift)) // 2
+        {
+            // Set the LeftShift key.
+            keyPressed = KeyCode.LeftShift; // 3
+        }
+        else if (Input.GetKey(KeyCode.LeftControl)) // 2
+        {
+            // Set the LeftControl key.
+            keyPressed = KeyCode.LeftControl; // 3
+        }
+        else // 4
+        {
+            // In any other case reset to default and consider it unmodified.
+            keyPressed = default; // 5
+        }
+    }
+
+    private void OnMouseDown() // 6
+    {
+        // Check if a key was pressed.
+        if (keyPressed == KeyCode.LeftShift) // 7
         {
             // Increment the Shift hit count.
-            hitCountShift++;
+            hitCountShift++; // 8
         }
-        else if (Input.GetKey(KeyCode.LeftControl))
+        else if (keyPressed == KeyCode.LeftControl) // 7
         {
             // Increment the Control hit count.
-            hitCountControl++;
+            hitCountControl++; // 8
         }
-        else
+        else // 9
         {
             // If neither Shift nor Control was held, we increment the unmodified hit count.
-            hitCountUnmodified++;
+            hitCountUnmodified++; // 10
         }
 
+        // 11
         // Create a string array with the three hit counts.
         string[] stringArray = {
-            hitCountUnmodified.ToString(),
-            hitCountShift.ToString(),
-            hitCountControl.ToString()
-        };
+        hitCountUnmodified.ToString(),
+        hitCountShift.ToString(),
+        hitCountControl.ToString()
+    };
 
+        // 12
         // Save the entries, line by line.
         File.WriteAllLines(HitCountFileUnmodified, stringArray);
     }
