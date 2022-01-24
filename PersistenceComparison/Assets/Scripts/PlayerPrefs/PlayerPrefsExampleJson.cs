@@ -24,17 +24,20 @@ public class PlayerPrefsExampleJson : MonoBehaviour
     // 3
     private const string HitCountKey = "HitCountKeyJson";
 
+    // 4
+    private KeyCode keyPressed = default;
+
     private void Start()
     {
-        // 4
+        // 5
         // Check if the key exists. If not, we never saved to it.
         if (PlayerPrefs.HasKey(HitCountKey))
         {
-            // 5
+            // 6
             string jsonString = PlayerPrefs.GetString(HitCountKey);
             HitCount hitCount = JsonUtility.FromJson<HitCount>(jsonString);
 
-            // 6
+            // 7
             if (hitCount != null)
             {
                 hitCountUnmodified = hitCount.Unmodified;
@@ -44,31 +47,51 @@ public class PlayerPrefsExampleJson : MonoBehaviour
         }
     }
 
+    private void Update() // 8
+    {
+        // Check if a key was pressed.
+        if (Input.GetKey(KeyCode.LeftShift)) // 9
+        {
+            // Set the LeftShift key.
+            keyPressed = KeyCode.LeftShift; // 10
+        }
+        else if (Input.GetKey(KeyCode.LeftControl)) // 9
+        {
+            // Set the LeftControl key.
+            keyPressed = KeyCode.LeftControl; // 10
+        }
+        else // 11
+        {
+            // In any other case reset to default and consider it unmodified.
+            keyPressed = default; // 12
+        }
+    }
+
     private void OnMouseDown()
     {
-        if (Input.GetKey(KeyCode.LeftShift)) // 7
+        if (keyPressed == KeyCode.LeftShift) // 13
         {
             // Increment the hit count and set it to PlayerPrefs.
-            hitCountShift++; // 8
+            hitCountShift++; // 14
         }
-        else if (Input.GetKey(KeyCode.LeftControl)) // 7
+        else if (keyPressed == KeyCode.LeftControl) // 13
         {
             // Increment the hit count and set it to PlayerPrefs.
-            hitCountControl++; // 8
+            hitCountControl++; // 14
         }
-        else // 9
+        else // 15
         {
             // Increment the hit count and set it to PlayerPrefs.
-            hitCountUnmodified++; // 10
+            hitCountUnmodified++; // 16
         }
 
-        // 11
+        // 17
         HitCount hitCount = new();
         hitCount.Unmodified = hitCountUnmodified;
         hitCount.Shift = hitCountShift;
         hitCount.Control = hitCountControl;
 
-        // 12
+        // 18
         string jsonString = JsonUtility.ToJson(hitCount);
         PlayerPrefs.SetString(HitCountKey, jsonString);
         PlayerPrefs.Save();

@@ -3,7 +3,7 @@
 
 ## Introduction
 
-Persisting data is an important of most games. Unity offers only a limited set of solutions which means we have to look around for other options as well.
+Persisting data is an important part of most games. Unity offers only a limited set of solutions which means we have to look around for other options as well.
 
 In this tutorial series we will explore the options given to us by Unity and third party libraries. Each part will take a deeper look into one of them with the final part being a comparison:
 
@@ -71,9 +71,11 @@ The first thing we need to add is a counter for the clicks on the capsule (1). A
 
 Whenever the game starts (2) we want to read the current hit count from the persistence and initialize `hitCount` accordingly (3). This is done in the `Start()` method that is called whenever a scene is loaded for each game object this script is attached to.
 
-The second part to this is saving changes which we want to do whenever we register a mouse click. The Unity message for this is `OnMouseDown()` (4). This method gets called every time the `GameObject` that this script is attached to is clicked (with a left mouse click). In this case we increment the `hitCount` (5) which will eventually be saved by the various options shown in this tutorials series.
+The second part to this is saving changes, which we want to do whenever we register a mouse click. The Unity message for this is `OnMouseDown()` (4). This method gets called every time the `GameObject` that this script is attached to is clicked (with a left mouse click). In this case we increment the `hitCount` (5) which will eventually be saved by the various options shown in this tutorials series.
 
 ## PlayerPrefs
+
+(see `PlayerPrefsExampleSimple.cs` in the repository for the finished version)
 
 The easiest and probably most straight forward way to save data in Unity is using the built in [`PlayerPrefs`](https://docs.unity3d.com/ScriptReference/PlayerPrefs.html). The downside however is the limited usability since only three data types are supported:
 
@@ -83,7 +85,7 @@ The easiest and probably most straight forward way to save data in Unity is usin
 
 Another important fact about them is that they save data in plain text which means a player can easily change their content. `PlayerPrefs` should therefore only be used for things like graphic settings, user names and other data that could be changed in game anyway and therefore does not need to be safe.
 
-Depending on the operating system the game is running on the `PlayerPrefs` get saved in different locations. They are all [listed in the documentation](https://docs.unity3d.com/ScriptReference/PlayerPrefs.html), Windows for example uses the registry to save the data under `HKCU\Software\ExampleCompanyName\ExampleProductName`
+Depending on the operating system the game is running on, the `PlayerPrefs` get saved in different locations. They are all [listed in the documentation](https://docs.unity3d.com/ScriptReference/PlayerPrefs.html), Windows for example uses the registry to save the data under `HKCU\Software\ExampleCompanyName\ExampleProductName`
 
 The usage of `PlayerPrefs` is basically the same as a dictionary. They get accessed as `key`/`value` pairs where the `key` is of type `string`. Each supported data type has its own function:
 
@@ -129,7 +131,7 @@ public class PlayerPrefsExampleSimple : MonoBehaviour
 
 ```
 
-For the `PlayerPrefs` example we create a script named `PlayerPrefsExample` based on the `HitCountExample` shown earlier.
+For the `PlayerPrefs` example we create a script named `PlayerPrefsExampleSimple` based on the `HitCountExample` shown earlier.
 
 In addition to the basic structure we also need to define a key (1) that will be used to save the `hitCount` in the `PlayerPrefs`, let's call it `"HitCountKey"`.
 
@@ -139,6 +141,8 @@ The second part is saving data whenever it changes. On each click after we incre
 To write the data to disk we call `Save()` (5).
 
 ## Extended example
+
+(see `PlayerPrefsExampleExtended.cs` in the repository for the finished version)
 
 In the second part of this tutorial we will extend this very simple version to look at ways to save more complex data within `PlayerPrefs`.
 
@@ -166,31 +170,71 @@ private readonly string HitCountKeyControl = "HitCountKeyControl";
 
 There are many different ways to save more complex data. Here we will be using three different entries in `PlayerPrefs` as a first step. Later we will also look at how we can save structured data that belongs together in a different way.
 
-When starting the scene the loading looks very similar just extended by two more calls:
+One more field we need to save is the `KeyCode` for the key that was pressed:
+
+```cs
+private KeyCode keyPressed = default;
+```
+
+When starting the scene, loading the data looks similar to the previous example, just extended by two more calls:
 
 ```cs
 private void Start()
 {
     // Check if the key exists. If not, we never saved the hit count before.
-    if (PlayerPrefs.HasKey(HitCountKeyUnmodified)) // 3
+    if (PlayerPrefs.HasKey(HitCountKeyUnmodified)) // 4
     {
         // Read the hit count from the PlayerPrefs.
-        hitCountUnmodified = PlayerPrefs.GetInt(HitCountKeyUnmodified); // 4
+        hitCountUnmodified = PlayerPrefs.GetInt(HitCountKeyUnmodified); // 5
     }
-    if (PlayerPrefs.HasKey(HitCountKeyShift)) // 3
+    if (PlayerPrefs.HasKey(HitCountKeyShift)) // 4
     {
         // Read the hit count from the PlayerPrefs.
-        hitCountShift = PlayerPrefs.GetInt(HitCountKeyShift); // 4
+        hitCountShift = PlayerPrefs.GetInt(HitCountKeyShift); // 5
     }
-    if (PlayerPrefs.HasKey(HitCountKeyControl)) // 3
+    if (PlayerPrefs.HasKey(HitCountKeyControl)) // 4
     {
         // Read the hit count from the PlayerPrefs.
-        hitCountControl = PlayerPrefs.GetInt(HitCountKeyControl); // 4
+        hitCountControl = PlayerPrefs.GetInt(HitCountKeyControl); // 5
     }
 }
 ```
 
-As before, we first check if the key exists in the `PlayerPrefs` (3) and if so, we set the corresponding counter (4) to its value. This is fine for a simple example but here you can already see that saving more complex data will bring `PlayerPrefs` very soon to its limits if you do not want to write a lot of boilerplate code.
+As before, we first check if the key exists in the `PlayerPrefs` (4) and if so, we set the corresponding counter (5) to its value. This is fine for a simple example but here you can already see that saving more complex data will bring `PlayerPrefs` very soon to its limits if you do not want to write a lot of boilerplate code.
+
+Unity offers a detection for keyboard clicks and other input like a controller or the mouse via a class called [`Input`](https://docs.unity3d.com/ScriptReference/Input.html). Using `GetKey` we can check if a specific key was held down the moment we register a mouse click.
+
+The documentation tells us about one important fact though:
+
+> Note: Input flags are not reset until Update. You should make all the Input calls in the Update Loop.
+
+Therefore we also need to implement the [`Update()`](https://docs.unity3d.com/ScriptReference/MonoBehaviour.Update.html) function (6) where we check for the key and save it in the previously defined `keyPressed`.
+
+The keys can be addressed via their name as string but the type safe way to do this is to use the class `KeyCode` which defines every key necessary. For our case this would be `KeyCode.LeftShift` and `KeyCode.LeftControl`.
+
+Those checks use `Input.GetKey()` (7) and if one of the two was found, it will be saved as the `keyPressed` (8). If neither of them was pressed (9) we just reset `keyPressed` to the `default` (10) which we will use as a marker for an unmodified mouse click.
+
+```cs
+private void Update() // 6
+{
+    // Check if a key was pressed.
+    if (Input.GetKey(KeyCode.LeftShift)) // 7
+    {
+        // Set the LeftShift key.
+        keyPressed = KeyCode.LeftShift; // 8
+    }
+    else if (Input.GetKey(KeyCode.LeftControl)) // 7
+    {
+        // Set the LeftControl key.
+        keyPressed = KeyCode.LeftControl; // 8
+    }
+    else // 9
+    {
+        // In any other case reset to default and consider it unmodified.
+        keyPressed = default; // 10
+    }
+}
+```
 
 The same triplet can then also be found in the click detection:
 
@@ -198,53 +242,47 @@ The same triplet can then also be found in the click detection:
 private void OnMouseDown()
 {
     // Check if a key was pressed.
-    if (Input.GetKey(KeyCode.LeftShift)) // 5
+    if (keyPressed == KeyCode.LeftShift) // 11
     {
         // Increment the hit count and set it to PlayerPrefs.
-        hitCountShift++; // 6
-        PlayerPrefs.SetInt(HitCountKeyShift, hitCountShift); // 9
+        hitCountShift++; // 12
+        PlayerPrefs.SetInt(HitCountKeyShift, hitCountShift); // 15
     }
-    else if (Input.GetKey(KeyCode.LeftControl)) // 5
+    else if (keyPressed == KeyCode.LeftControl) // 11
     {
         // Increment the hit count and set it to PlayerPrefs.
-        hitCountControl++; // 
-        PlayerPrefs.SetInt(HitCountKeyControl, hitCountControl); // 9
+        hitCountControl++; // 12
+        PlayerPrefs.SetInt(HitCountKeyControl, hitCountControl); // 15
     }
-    else // 7
+    else // 13
     {
         // Increment the hit count and set it to PlayerPrefs.
-        hitCountUnmodified++; // 8
-        PlayerPrefs.SetInt(HitCountKeyUnmodified, hitCountUnmodified); // 9
+        hitCountUnmodified++; // 14
+        PlayerPrefs.SetInt(HitCountKeyUnmodified, hitCountUnmodified); // 15
     }
 
     // Persist the data to disk.
-    PlayerPrefs.Save(); // 10
+    PlayerPrefs.Save(); // 16
 }
 ```
 
-Unity offers a detection for keyboard clicks and other input like a controller or the mouse via a class called [`Input`](https://docs.unity3d.com/ScriptReference/Input.html). Using `GetKey` we can check if a specific key was held down the moment we register a mouse click.
+First we check if one of those two was held down while the click happened (11) and if so, increment the corresponding hit counter (12). If not (13), the `unmodfied` counter has to be incremented (14).
 
-The keys can be addressed via their name as string but the type safe way to do this is to use the class `KeyCode` which defines every key necessary. For our case this would be `KeyCode.LeftShift` and `KeyCode.LeftControl`.
+Finally, we need to set each of those three counters individually (15) via `PlayerPrefs.SetInt()` using the three keys we defined earlier.
 
-First we check if one of those two was held down while the click happened (5) and if so, increment the corresponding hit counter (6). If not (7), the `unmodfied` counter can be incremented (8).
+Like in the previous example, we also call `Save()` (16) at the end to make sure, data does not get lost if the game does not end normally.
 
-Finally, we need to set each of those three counters individually (9) via `PlayerPrefs.SetInt` using the three keys we defined above.
-
-Like in the simple example, we also call `Save()` (10) at the end to make sure, data does not get lost if the game does not end normally.
-
-When switching back to the Unity editor they script on the capsule should now look like this:
+When switching back to the Unity editor, the script on the capsule should now look like this:
 
 <img src="images/05_extended_version.jpg" alt="Extended example" width="500"/>
 
-You can find the finished version of the extended example in the repository under `PersistenceComparison\Assets\Scripts\PlayerPrefsExampleExtended.cs`
-
 ## More complex data
+
+(see `PlayerPrefsExampleJson.cs` in the repository for the finished version)
 
 In the previous two sections we have seen how to handle two simple examples of persisting data in `PlayerPrefs`. What if they get more complex than that? What if you want to structure and group data together?
 
 One possible approach would be to use the fact that `PlayerPrefs` can hold a `string` and save a `JSON` in there.
-
-You can find `PlayerPrefsExampleJson` in the example repository as well. Let's have a look at it in a moment!
 
 First we need to figure out how to actually transform our data into JSON. The .NET framework as well as the `UnityEngine` framework offer a JSON serialize and deserializer to do this job for us. Both behave very similar but we will use Unity's own [`JsonUtility`](https://docs.unity3d.com/ScriptReference/JsonUtility.html) which [performs better in Unity than other similar JSON solution](https://docs.unity3d.com/Manual/JSONSerialization.html).
 
@@ -280,24 +318,31 @@ All those will eventually be saved into the same `PlayerPrefs` field which means
 private readonly string hitCountKey = "HitCountKeyJson";
 ```
 
-In `Start()` we then need to read the JSON. As before, we check if the `PlayerPrefs` key exists (4) and then read the data, this time using `GetString()` (as opposed to `GetInt()` before).
+As before, the `keyPressed` will indicate which modifier was used:
 
-Transforming this JSON into the actual object is then done using `JsonUtility.FromJson()` (5) which takes the string as an argument. It's a generic function and we need to provide the information about which object this JSON is supposed to be representing, in this case `HitCount`.
+```cs
+// 4
+private KeyCode keyPressed = default;
+```
 
-If the JSON could be read and transformed successfully we can set the hit count fields (6) to their three values.
+In `Start()` we then need to read the JSON. As before, we check if the `PlayerPrefs` key exists (5) and then read the data, this time using `GetString()` (as opposed to `GetInt()` before).
+
+Transforming this JSON into the actual object is then done using `JsonUtility.FromJson()` (6) which takes the string as an argument. It's a generic function and we need to provide the information about which object this JSON is supposed to be representing, in this case `HitCount`.
+
+If the JSON could be read and transformed successfully we can set the hit count fields (7) to their three values.
 
 ```cs
 private void Start()
 {
-    // 4
+    // 5
     // Check if the key exists. If not, we never saved to it.
-    if (PlayerPrefs.HasKey(hitCountKey))
+    if (PlayerPrefs.HasKey(HitCountKey))
     {
-        // 5
-        string jsonString = PlayerPrefs.GetString(hitCountKey);
+        // 6
+        string jsonString = PlayerPrefs.GetString(HitCountKey);
         HitCount hitCount = JsonUtility.FromJson<HitCount>(jsonString);
 
-        // 6
+        // 7
         if (hitCount != null)
         {
             hitCountUnmodified = hitCount.Unmodified;
@@ -308,43 +353,67 @@ private void Start()
 }
 ```
 
+The detection for the key that was pressed is identical to the extended example since it does not involve loading or saving any data but is just a check for the key during `Update()`:
+
+```cs
+private void Update() // 8
+{
+    // Check if a key was pressed.
+    if (Input.GetKey(KeyCode.LeftShift)) // 9
+    {
+        // Set the LeftShift key.
+        keyPressed = KeyCode.LeftShift; // 10
+    }
+    else if (Input.GetKey(KeyCode.LeftControl)) // 9
+    {
+        // Set the LeftControl key.
+        keyPressed = KeyCode.LeftControl; // 10
+    }
+    else // 11
+    {
+        // In any other case reset to default and consider it unmodified.
+        keyPressed = default; // 12
+    }
+}
+```
+
 In a very similar fashion `OnMouseDown()` needs to save the data whenever it's changed.
 
 ```cs
 private void OnMouseDown()
 {
-    if (Input.GetKey(KeyCode.LeftShift)) // 7
+    if (keyPressed == KeyCode.LeftShift) // 13
     {
         // Increment the hit count and set it to PlayerPrefs.
-        hitCountShift++; // 8
+        hitCountShift++; // 14
     }
-    else if (Input.GetKey(KeyCode.LeftControl)) // 7
+    else if (keyPressed == KeyCode.LeftControl) // 13
     {
         // Increment the hit count and set it to PlayerPrefs.
-        hitCountControl++; // 8
+        hitCountControl++; // 14
     }
-    else // 9
+    else // 15
     {
         // Increment the hit count and set it to PlayerPrefs.
-        hitCountUnmodified++; // 10
+        hitCountUnmodified++; // 16
     }
 
-    // 11
+    // 17
     HitCount hitCount = new();
     hitCount.Unmodified = hitCountUnmodified;
     hitCount.Shift = hitCountShift;
     hitCount.Control = hitCountControl;
 
-    // 12
+    // 18
     string jsonString = JsonUtility.ToJson(hitCount);
-    PlayerPrefs.SetString(hitCountKey, jsonString);
+    PlayerPrefs.SetString(HitCountKey, jsonString);
     PlayerPrefs.Save();
 }
 ```
 
-Compared to before you see that checking the key and increasing the counter (7 - 10) is basically unchanged except for the save part that is now a bit different.
+Compared to before you see that checking the key and increasing the counter (13 - 16) is basically unchanged except for the save part that is now a bit different.
 
-First, we need to create a new `HitCount` object (11) and assign the three counts. Using `JsonUtility.ToJson()` we can then (12) create a JSON string from this object and set it using the `PlayerPrefs`.
+First, we need to create a new `HitCount` object (17) and assign the three counts. Using `JsonUtility.ToJson()` we can then (18) create a JSON string from this object and set it using the `PlayerPrefs`.
 
 Remember to also call `Save()` here to make sure data cannot get lost in case the game crashes without being able to call `OnApplicationQuit()`.
 
