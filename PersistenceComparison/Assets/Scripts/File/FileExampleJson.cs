@@ -63,31 +63,34 @@ public class FileExampleJson : MonoBehaviour
     {
         // 1
         // Check if a key was pressed.
-        if (modifier == KeyCode.LeftShift)
+        switch (modifier)
         {
-            // Increment the Shift hit count.
-            hitCountShift++;
-        }
-        else if (modifier == KeyCode.LeftControl)
-        {
-            // Increment the Control hit count.
-            hitCountControl++;
-        }
-        else
-        {
-            // If neither Shift nor Control was held, we increment the unmodified hit count.
-            hitCountUnmodified++;
+            case KeyCode.LeftShift:
+                // Increment the Shift hit count.
+                hitCountShift++;
+                break;
+            case KeyCode.LeftCommand:
+                // Increment the Control hit count.
+                hitCountControl++;
+                break;
+            default:
+                // If neither Shift nor Control was held, we increment the unmodified hit count.
+                hitCountUnmodified++;
+                break;
         }
 
+        // 2
         // Create a new HitCount object to hold this data.
         HitCount hitCount = new();
         hitCount.Unmodified = hitCountUnmodified;
         hitCount.Shift = hitCountShift;
         hitCount.Control = hitCountControl;
 
+        // 3
         // Create a JSON using the HitCount object.
         string jsonString = JsonUtility.ToJson(hitCount, true);
 
+        // 4
         // Save the json to the file.
         File.WriteAllText(HitCountFileJson, jsonString);
     }

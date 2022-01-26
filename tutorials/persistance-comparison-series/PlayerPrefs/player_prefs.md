@@ -401,14 +401,14 @@ private void OnMouseDown()
 
     // 17
     var updatedCount = new HitCount
-    { 
+    {
         Unmodified = hitCountUnmodified,
         Shift = hitCountShift,
         Control = hitCountControl,
     };
 
     // 18
-    string jsonString = JsonUtility.ToJson(hitCount);
+    var jsonString = JsonUtility.ToJson(updatedCount);
     PlayerPrefs.SetString(HitCountKey, jsonString);
     PlayerPrefs.Save();
 }

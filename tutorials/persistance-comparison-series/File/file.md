@@ -197,20 +197,20 @@ Now to saving the data when a click happens:
 private void OnMouseDown() // 6
 {
     // Check if a key was pressed.
-    if (modifier == KeyCode.LeftShift) // 7
+    switch (modifier)
     {
-        // Increment the Shift hit count.
-        hitCountShift++; // 8
-    }
-    else if (modifier == KeyCode.LeftControl) // 7
-    {
-        // Increment the Control hit count.
-        hitCountControl++; // 8
-    }
-    else // 9
-    {
-        // If neither Shift nor Control was held, we increment the unmodified hit count.
-        hitCountUnmodified++; // 10
+        case KeyCode.LeftShift: // 7
+            // Increment the Shift hit count.
+            hitCountShift++; // 8
+            break;
+        case KeyCode.LeftCommand: // 7
+            // Increment the Control hit count.
+            hitCountControl++; // 8
+            break;
+        default: // 9
+            // If neither Shift nor Control was held, we increment the unmodified hit count.
+            hitCountUnmodified++; // 10
+            break;
     }
 
     // 11
@@ -285,20 +285,20 @@ private void OnMouseDown()
 {
     // 1
     // Check if a key was pressed.
-    if (modifier == KeyCode.LeftShift)
+    switch (modifier)
     {
-        // Increment the Shift hit count.
-        hitCountShift++;
-    }
-    else if (modifier == KeyCode.LeftControl)
-    {
-        // Increment the Control hit count.
-        hitCountControl++;
-    }
-    else
-    {
-        // If neither Shift nor Control was held, we increment the unmodified hit count.
-        hitCountUnmodified++;
+        case KeyCode.LeftShift:
+            // Increment the Shift hit count.
+            hitCountShift++;
+            break;
+        case KeyCode.LeftCommand:
+            // Increment the Control hit count.
+            hitCountControl++;
+            break;
+        default:
+            // If neither Shift nor Control was held, we increment the unmodified hit count.
+            hitCountUnmodified++;
+            break;
     }
 
     // 2
@@ -322,7 +322,7 @@ However, we need to update the second part. Instead of a string array we create 
 
 Using `JsonUtility.ToJson()` we can transform this object to a string (3). If you pass in `true` for the second, optional parameter `prettyPrint` the string will be formatted in a nicely readable way.
 
-Finally, as in `FileExampleSimple.cs` we just use `WriteAllText()` since we're only saving one string, not an array.
+Finally, as in `FileExampleSimple.cs` we just use `WriteAllText()` since we're only saving one string, not an array (4).
 
 When you run the game you will the that in the editor it looks identical to the previous section since we are using the same three counters. If you open the file `hitCountFileJson.txt` you should then see the three counters in a nicely formatted JSON.
 

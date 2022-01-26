@@ -57,29 +57,29 @@ public class FileExampleExtended : MonoBehaviour
     private void OnMouseDown() // 6
     {
         // Check if a key was pressed.
-        if (modifier == KeyCode.LeftShift) // 7
+        switch (modifier)
         {
-            // Increment the Shift hit count.
-            hitCountShift++; // 8
-        }
-        else if (modifier == KeyCode.LeftControl) // 7
-        {
-            // Increment the Control hit count.
-            hitCountControl++; // 8
-        }
-        else // 9
-        {
-            // If neither Shift nor Control was held, we increment the unmodified hit count.
-            hitCountUnmodified++; // 10
+            case KeyCode.LeftShift: // 7
+                // Increment the Shift hit count.
+                hitCountShift++; // 8
+                break;
+            case KeyCode.LeftCommand: // 7
+                // Increment the Control hit count.
+                hitCountControl++; // 8
+                break;
+            default: // 9
+                // If neither Shift nor Control was held, we increment the unmodified hit count.
+                hitCountUnmodified++; // 10
+                break;
         }
 
         // 11
         // Create a string array with the three hit counts.
         string[] stringArray = {
-        hitCountUnmodified.ToString(),
-        hitCountShift.ToString(),
-        hitCountControl.ToString()
-    };
+            hitCountUnmodified.ToString(),
+            hitCountShift.ToString(),
+            hitCountControl.ToString()
+        };
 
         // 12
         // Save the entries, line by line.
