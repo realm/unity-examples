@@ -26,12 +26,16 @@ public class FileExampleJson : MonoBehaviour
     private void Start()
     {
         // Check if the file exists to avoid errors when opening a non-existing file.
-        if (File.Exists(HitCountFileJson))
+        if (File.Exists(HitCountFileJson)) // 5
         {
+            // 6
             var jsonString = File.ReadAllText(HitCountFileJson);
             var hitCount = JsonUtility.FromJson<HitCount>(jsonString);
+
+            // 7
             if (hitCount != null)
             {
+                // 8
                 hitCountUnmodified = hitCount.Unmodified;
                 hitCountShift = hitCount.Shift;
                 hitCountControl = hitCount.Control;

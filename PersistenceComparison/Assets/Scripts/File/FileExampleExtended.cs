@@ -17,15 +17,19 @@ public class FileExampleExtended : MonoBehaviour
 
     private void Start()
     {
+        // 12
         // Check if the file exists. If not, we never saved before.
         if (File.Exists(HitCountFileUnmodified))
         {
+            // 13
             // Read all lines.
             string[] textFileWriteAllLines = File.ReadAllLines(HitCountFileUnmodified);
 
+            // 14
             // For this extended example we would expect to find three lines, one per counter.
             if (textFileWriteAllLines.Length == 3)
             {
+                // 15
                 // Set the counters correspdoning to the entries in the array.
                 hitCountUnmodified = Int32.Parse(textFileWriteAllLines[0]);
                 hitCountShift = Int32.Parse(textFileWriteAllLines[1]);

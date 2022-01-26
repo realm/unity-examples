@@ -66,7 +66,6 @@ public class HitCountExample : MonoBehaviour
         hitCount++; // 5
     }
 }
-
 ```
 
 The first thing we need to add is a counter for the clicks on the capsule (1). Add a `[SerilizeField]` here so that you can observe it while clicking on the capsule in the Unity editor.
@@ -103,25 +102,25 @@ public class FileExampleSimple : MonoBehaviour
 
     [SerializeField] private int hitCount = 0;
 
-    private const string HitCountFile = "hitCountFile.txt"; // 1
+    private const string HitCountFile = "hitCountFile.txt";
 
-    private void Start() // 5
+    private void Start()
     {
-        if (File.Exists(HitCountFile)) // 6
+        if (File.Exists(HitCountFile))
         {
-            string textFileWriteAllText = File.ReadAllText(HitCountFile); // 7
-            hitCount = Int32.Parse(textFileWriteAllText); // 8
+            var fileContent = File.ReadAllText(HitCountFile);
+            hitCount = Int32.Parse(fileContent);
         }
     }
 
-    private void OnMouseDown() // 2
+    private void OnMouseDown()
     {
-        hitCount++; // 3
+        hitCount++;
 
         // The easiest way when working with Files is to use them directly.
         // This writes all input at once and overwrites a file if executed again.
         // The File is opened and closed right away.
-        File.WriteAllText(HitCountFile, hitCount.ToString()); // 4
+        File.WriteAllText(HitCountFile, hitCount.ToString());
     }
 
 }
@@ -243,6 +242,38 @@ After stopping the game and therefore saving the data a new file `hitCountFileEx
 
 <img src="images/08_hit_count_extended_file.jpg" alt="File hitCountExtended.txt" width=""/>
 
+Last but not least, let's look at how to load the file again when starting the game:
+
+```cs
+private void Start()
+{
+    // 12
+    // Check if the file exists. If not, we never saved before.
+    if (File.Exists(HitCountFileUnmodified))
+    {
+        // 13
+        // Read all lines.
+        string[] textFileWriteAllLines = File.ReadAllLines(HitCountFileUnmodified);
+
+        // 14
+        // For this extended example we would expect to find three lines, one per counter.
+        if (textFileWriteAllLines.Length == 3)
+        {
+            // 15
+            // Set the counters correspdoning to the entries in the array.
+            hitCountUnmodified = Int32.Parse(textFileWriteAllLines[0]);
+            hitCountShift = Int32.Parse(textFileWriteAllLines[1]);
+            hitCountControl = Int32.Parse(textFileWriteAllLines[2]);
+        }
+    }
+}
+```
+
+First, we check if the file even exists (12). If we ever saved data before, this should be the case. If it exists, we read the data. Similar to writing with `WriteAllLines()` we use `ReadAllLines` (13) to create a string array where each entry represents one line in the file.
+
+We do expect there to be three lines so we should expect the string array to have three entries (14).
+Using this knowledge we can then assign the three entries from the array to the corresponding hit counts (15).
+
 As long as all the data saved to those lines belongs together, the file can be one option. If you have several different properties you might create multiple files. Alternatively you can save all the data into the same file using a bit of structure. Note though that the numbers will not be associated with the properties. If the structure of the object changes, we would need to migrate the file as well and take this into account the next time we open and read the file.
 
 Another possible approach to structuring your data will be shown in the next section using JSON.
@@ -305,14 +336,16 @@ private void OnMouseDown()
 
     // 2
     // Create a new HitCount object to hold this data.
-    HitCount hitCount = new();
-    hitCount.Unmodified = hitCountUnmodified;
-    hitCount.Shift = hitCountShift;
-    hitCount.Control = hitCountControl;
+    var updatedCount = new HitCount
+    {
+        Unmodified = hitCountUnmodified,
+        Shift = hitCountShift,
+        Control = hitCountControl,
+    };
 
     // 3
     // Create a JSON using the HitCount object.
-    string jsonString = JsonUtility.ToJson(hitCount, true);
+    var jsonString = JsonUtility.ToJson(updatedCount, true);
 
     // 4
     // Save the json to the file.
@@ -326,7 +359,37 @@ Using `JsonUtility.ToJson()` we can transform this object to a string (3). If yo
 
 Finally, as in `FileExampleSimple.cs` we just use `WriteAllText()` since we're only saving one string, not an array (4).
 
-When you run the game you will the that in the editor it looks identical to the previous section since we are using the same three counters. If you open the file `hitCountFileJson.txt` you should then see the three counters in a nicely formatted JSON.
+Then, when the game starts, we need to read the data back into the hit count:
+
+```cs
+private void Start()
+{
+    // Check if the file exists to avoid errors when opening a non-existing file.
+    if (File.Exists(HitCountFileJson)) // 5
+    {
+        // 6
+        var jsonString = File.ReadAllText(HitCountFileJson);
+        var hitCount = JsonUtility.FromJson<HitCount>(jsonString);
+
+        // 7
+        if (hitCount != null)
+        {
+            // 8
+            hitCountUnmodified = hitCount.Unmodified;
+            hitCountShift = hitCount.Shift;
+            hitCountControl = hitCount.Control;
+        }
+    }
+}
+```
+
+We check if the file exists first (5). In case it does, we saved data before and can proceed reading it.
+
+Using `ReadAllText` we read the string from the file and transform it via `JsonUtility.FromJson<>()` into an object of type `HitCount` (6).
+
+If this happened successfully (7) we can then assign the three properties to their corresponding hit count (8).
+
+When you run the game you will see the that in the editor it looks identical to the previous section since we are using the same three counters. If you open the file `hitCountFileJson.txt` you should then see the three counters in a nicely formatted JSON.
 
 <img src="images/09_hit_count_extended_json.jpg" alt="File hitCountExtended.txt" width=""/>
 
