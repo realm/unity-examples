@@ -64,7 +64,6 @@ public class HitCountExample : MonoBehaviour
         hitCount++; // 5
     }
 }
-
 ```
 
 The first thing we need to add is a counter for the clicks on the capsule (1). Add a `[SerializeField]` here so that you can observe it while clicking on the capsule in the Unity editor.
@@ -106,15 +105,15 @@ public class PlayerPrefsExampleSimple : MonoBehaviour
 
     [SerializeField] private int hitCount = 0;
 
-    private readonly string hitCountKey = "HitCountKey"; // 1
+    private const string HitCountKey = "HitCountKey"; // 1
 
     private void Start()
     {
         // Check if the key exists. If not, we never saved the hit count before.
-        if (PlayerPrefs.HasKey(hitCountKey)) // 2
+        if (PlayerPrefs.HasKey(HitCountKey)) // 2
         {
             // Read the hit count from the PlayerPrefs.
-            hitCount = PlayerPrefs.GetInt(hitCountKey); // 3
+            hitCount = PlayerPrefs.GetInt(HitCountKey); // 3
         }
     }
 
@@ -123,12 +122,11 @@ public class PlayerPrefsExampleSimple : MonoBehaviour
         hitCount++;
 
         // Set and save the hit count before ending the game.
-        PlayerPrefs.SetInt(hitCountKey, hitCount); // 4
+        PlayerPrefs.SetInt(HitCountKey, hitCount); // 4
         PlayerPrefs.Save(); // 5
     }
 
 }
-
 ```
 
 For the `PlayerPrefs` example we create a script named `PlayerPrefsExampleSimple` based on the `HitCountExample` shown earlier.
@@ -163,9 +161,9 @@ The same has to be done for the `PlayerPrefs` keys. Remove the `HitCountKey` and
 
 ```cs
 // 2
-private readonly string HitCountKeyUnmodified = "HitCountKeyUnmodified";
-private readonly string HitCountKeyShift = "HitCountKeyShift";
-private readonly string HitCountKeyControl = "HitCountKeyControl";
+private const string HitCountKeyUnmodified = "HitCountKeyUnmodified";
+private const string HitCountKeyShift = "HitCountKeyShift";
+private const string HitCountKeyControl = "HitCountKeyControl";
 ```
 
 There are many different ways to save more complex data. Here we will be using three different entries in `PlayerPrefs` as a first step. Later we will also look at how we can save structured data that belongs together in a different way.
@@ -173,6 +171,7 @@ There are many different ways to save more complex data. Here we will be using t
 One more field we need to save is the `KeyCode` for the key that was pressed:
 
 ```cs
+// 3
 private KeyCode modifier = default;
 ```
 
@@ -315,7 +314,7 @@ All those will eventually be saved into the same `PlayerPrefs` field which means
 
 ```cs
 // 3
-private readonly string hitCountKey = "HitCountKeyJson";
+private const string HitCountKey = "HitCountKeyJson";
 ```
 
 As before, the `modifier` will indicate which modifier was used:
@@ -339,8 +338,8 @@ private void Start()
     if (PlayerPrefs.HasKey(HitCountKey))
     {
         // 6
-        string jsonString = PlayerPrefs.GetString(HitCountKey);
-        HitCount hitCount = JsonUtility.FromJson<HitCount>(jsonString);
+        var jsonString = PlayerPrefs.GetString(HitCountKey);
+        var hitCount = JsonUtility.FromJson<HitCount>(jsonString);
 
         // 7
         if (hitCount != null)
