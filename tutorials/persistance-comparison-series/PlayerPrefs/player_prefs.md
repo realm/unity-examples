@@ -24,7 +24,7 @@ The repository can be found at https://github.com/realm/unity-examples with this
 
 The goal of this tutorial series is to show you a quick and easy way to make some first steps in the various ways to persist data in your game.
 
-Therefore the example we will be using will be as simply as possible in the editor itself so that we can fully focus on the actual code we need to write.
+Therefore the example we will be using will be as simple as possible in the editor itself so that we can fully focus on the actual code we need to write.
 
 <img src="images/01_capsule_in_scene.jpg" alt="Capsule in scene" width="500"/>
 
