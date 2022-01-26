@@ -173,7 +173,7 @@ There are many different ways to save more complex data. Here we will be using t
 One more field we need to save is the `KeyCode` for the key that was pressed:
 
 ```cs
-private KeyCode keyPressed = default;
+private KeyCode modifier = default;
 ```
 
 When starting the scene, loading the data looks similar to the previous example, just extended by two more calls:
@@ -208,11 +208,11 @@ The documentation tells us about one important fact though:
 
 > Note: Input flags are not reset until Update. You should make all the Input calls in the Update Loop.
 
-Therefore we also need to implement the [`Update()`](https://docs.unity3d.com/ScriptReference/MonoBehaviour.Update.html) function (6) where we check for the key and save it in the previously defined `keyPressed`.
+Therefore we also need to implement the [`Update()`](https://docs.unity3d.com/ScriptReference/MonoBehaviour.Update.html) function (6) where we check for the key and save it in the previously defined `modifier`.
 
 The keys can be addressed via their name as string but the type safe way to do this is to use the class `KeyCode` which defines every key necessary. For our case this would be `KeyCode.LeftShift` and `KeyCode.LeftControl`.
 
-Those checks use `Input.GetKey()` (7) and if one of the two was found, it will be saved as the `keyPressed` (8). If neither of them was pressed (9) we just reset `keyPressed` to the `default` (10) which we will use as a marker for an unmodified mouse click.
+Those checks use `Input.GetKey()` (7) and if one of the two was found, it will be saved as the `modifier` (8). If neither of them was pressed (9) we just reset `modifier` to the `default` (10) which we will use as a marker for an unmodified mouse click.
 
 ```cs
 private void Update() // 6
@@ -221,17 +221,17 @@ private void Update() // 6
     if (Input.GetKey(KeyCode.LeftShift)) // 7
     {
         // Set the LeftShift key.
-        keyPressed = KeyCode.LeftShift; // 8
+        modifier = KeyCode.LeftShift; // 8
     }
     else if (Input.GetKey(KeyCode.LeftControl)) // 7
     {
         // Set the LeftControl key.
-        keyPressed = KeyCode.LeftControl; // 8
+        modifier = KeyCode.LeftControl; // 8
     }
     else // 9
     {
         // In any other case reset to default and consider it unmodified.
-        keyPressed = default; // 10
+        modifier = default; // 10
     }
 }
 ```
@@ -242,13 +242,13 @@ The same triplet can then also be found in the click detection:
 private void OnMouseDown()
 {
     // Check if a key was pressed.
-    if (keyPressed == KeyCode.LeftShift) // 11
+    if (modifier == KeyCode.LeftShift) // 11
     {
         // Increment the hit count and set it to PlayerPrefs.
         hitCountShift++; // 12
         PlayerPrefs.SetInt(HitCountKeyShift, hitCountShift); // 15
     }
-    else if (keyPressed == KeyCode.LeftControl) // 11
+    else if (modifier == KeyCode.LeftControl) // 11
     {
         // Increment the hit count and set it to PlayerPrefs.
         hitCountControl++; // 12
@@ -318,11 +318,11 @@ All those will eventually be saved into the same `PlayerPrefs` field which means
 private readonly string hitCountKey = "HitCountKeyJson";
 ```
 
-As before, the `keyPressed` will indicate which modifier was used:
+As before, the `modifier` will indicate which modifier was used:
 
 ```cs
 // 4
-private KeyCode keyPressed = default;
+private KeyCode modifier = default;
 ```
 
 In `Start()` we then need to read the JSON. As before, we check if the `PlayerPrefs` key exists (5) and then read the data, this time using `GetString()` (as opposed to `GetInt()` before).
@@ -362,17 +362,17 @@ private void Update() // 8
     if (Input.GetKey(KeyCode.LeftShift)) // 9
     {
         // Set the LeftShift key.
-        keyPressed = KeyCode.LeftShift; // 10
+        modifier = KeyCode.LeftShift; // 10
     }
     else if (Input.GetKey(KeyCode.LeftControl)) // 9
     {
         // Set the LeftControl key.
-        keyPressed = KeyCode.LeftControl; // 10
+        modifier = KeyCode.LeftControl; // 10
     }
     else // 11
     {
         // In any other case reset to default and consider it unmodified.
-        keyPressed = default; // 12
+        modifier = default; // 12
     }
 }
 ```
@@ -382,12 +382,12 @@ In a very similar fashion `OnMouseDown()` needs to save the data whenever it's c
 ```cs
 private void OnMouseDown()
 {
-    if (keyPressed == KeyCode.LeftShift) // 13
+    if (modifier == KeyCode.LeftShift) // 13
     {
         // Increment the hit count and set it to PlayerPrefs.
         hitCountShift++; // 14
     }
-    else if (keyPressed == KeyCode.LeftControl) // 13
+    else if (modifier == KeyCode.LeftControl) // 13
     {
         // Increment the hit count and set it to PlayerPrefs.
         hitCountControl++; // 14

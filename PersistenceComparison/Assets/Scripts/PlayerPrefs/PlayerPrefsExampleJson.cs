@@ -25,7 +25,7 @@ public class PlayerPrefsExampleJson : MonoBehaviour
     private const string HitCountKey = "HitCountKeyJson";
 
     // 4
-    private KeyCode keyPressed = default;
+    private KeyCode modifier = default;
 
     private void Start()
     {
@@ -53,28 +53,28 @@ public class PlayerPrefsExampleJson : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftShift)) // 9
         {
             // Set the LeftShift key.
-            keyPressed = KeyCode.LeftShift; // 10
+            modifier = KeyCode.LeftShift; // 10
         }
         else if (Input.GetKey(KeyCode.LeftControl)) // 9
         {
             // Set the LeftControl key.
-            keyPressed = KeyCode.LeftControl; // 10
+            modifier = KeyCode.LeftControl; // 10
         }
         else // 11
         {
             // In any other case reset to default and consider it unmodified.
-            keyPressed = default; // 12
+            modifier = default; // 12
         }
     }
 
     private void OnMouseDown()
     {
-        if (keyPressed == KeyCode.LeftShift) // 13
+        if (modifier == KeyCode.LeftShift) // 13
         {
             // Increment the hit count and set it to PlayerPrefs.
             hitCountShift++; // 14
         }
-        else if (keyPressed == KeyCode.LeftControl) // 13
+        else if (modifier == KeyCode.LeftControl) // 13
         {
             // Increment the hit count and set it to PlayerPrefs.
             hitCountControl++; // 14

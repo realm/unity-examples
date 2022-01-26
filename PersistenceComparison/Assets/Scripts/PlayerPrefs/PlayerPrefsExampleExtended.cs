@@ -16,7 +16,7 @@ public class PlayerPrefsExampleExtended : MonoBehaviour
     private const string HitCountKeyControl = "HitCountKeyControl";
 
     // 3
-    private KeyCode keyPressed = default;
+    private KeyCode modifier = default;
 
     private void Start()
     {
@@ -44,30 +44,30 @@ public class PlayerPrefsExampleExtended : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftShift)) // 7
         {
             // Set the LeftShift key.
-            keyPressed = KeyCode.LeftShift; // 8
+            modifier = KeyCode.LeftShift; // 8
         }
         else if (Input.GetKey(KeyCode.LeftControl)) // 7
         {
             // Set the LeftControl key.
-            keyPressed = KeyCode.LeftControl; // 8
+            modifier = KeyCode.LeftControl; // 8
         }
         else // 9
         {
             // In any other case reset to default and consider it unmodified.
-            keyPressed = default; // 10
+            modifier = default; // 10
         }
     }
 
     private void OnMouseDown()
     {
         // Check if a key was pressed.
-        if (keyPressed == KeyCode.LeftShift) // 11
+        if (modifier == KeyCode.LeftShift) // 11
         {
             // Increment the hit count and set it to PlayerPrefs.
             hitCountShift++; // 12
             PlayerPrefs.SetInt(HitCountKeyShift, hitCountShift); // 15
         }
-        else if (keyPressed == KeyCode.LeftControl) // 11
+        else if (modifier == KeyCode.LeftControl) // 11
         {
             // Increment the hit count and set it to PlayerPrefs.
             hitCountControl++; // 
