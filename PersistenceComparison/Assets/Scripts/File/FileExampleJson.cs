@@ -28,8 +28,8 @@ public class FileExampleJson : MonoBehaviour
         // Check if the file exists to avoid errors when opening a non-existing file.
         if (File.Exists(HitCountFileJson))
         {
-            string jsonString = File.ReadAllText(HitCountFileJson);
-            HitCount hitCount = JsonUtility.FromJson<HitCount>(jsonString);
+            var jsonString = File.ReadAllText(HitCountFileJson);
+            var hitCount = JsonUtility.FromJson<HitCount>(jsonString);
             if (hitCount != null)
             {
                 hitCountUnmodified = hitCount.Unmodified;
@@ -88,7 +88,7 @@ public class FileExampleJson : MonoBehaviour
 
         // 3
         // Create a JSON using the HitCount object.
-        string jsonString = JsonUtility.ToJson(hitCount, true);
+        var jsonString = JsonUtility.ToJson(hitCount, true);
 
         // 4
         // Save the json to the file.
