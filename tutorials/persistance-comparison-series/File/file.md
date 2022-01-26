@@ -338,7 +338,7 @@ First of all, we open, write to, and save the file every single time the capsule
 
 Also, the data is saved in plain text and can easily be edited by the player.
 
-The more complex your data is, the more complex it will be to actually maintain this approach. What if the structure of the `HitCount` object changes? You have to change account for that when loading an older version of the JSON. Migrations are necessary.
+The more complex your data is, the more complex it will be to actually maintain this approach. What if the structure of the `HitCount` object changes? You have to account for that when loading an older version of the JSON. Migrations are necessary.
 
 In the following tutorials we will (among others) have a look at how databases can make this job a lot easier and take care of the problems we face here.
 
