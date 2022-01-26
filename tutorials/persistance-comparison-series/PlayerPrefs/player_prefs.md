@@ -284,7 +284,7 @@ In the previous two sections we have seen how to handle two simple examples of p
 
 One possible approach would be to use the fact that `PlayerPrefs` can hold a `string` and save a `JSON` in there.
 
-First we need to figure out how to actually transform our data into JSON. The .NET framework as well as the `UnityEngine` framework offer a JSON serialize and deserializer to do this job for us. Both behave very similar but we will use Unity's own [`JsonUtility`](https://docs.unity3d.com/ScriptReference/JsonUtility.html) which [performs better in Unity than other similar JSON solution](https://docs.unity3d.com/Manual/JSONSerialization.html).
+First we need to figure out how to actually transform our data into JSON. The .NET framework as well as the `UnityEngine` framework offer a JSON serializer and deserializer to do this job for us. Both behave very similar but we will use Unity's own [`JsonUtility`](https://docs.unity3d.com/ScriptReference/JsonUtility.html) which [performs better in Unity than other similar JSON solutions](https://docs.unity3d.com/Manual/JSONSerialization.html).
 
 To transform data to JSON we first need to create a container object. This has [some restriction](https://docs.unity3d.com/ScriptReference/JsonUtility.ToJson.html):
 
