@@ -15,8 +15,8 @@ public class FileExampleSimple : MonoBehaviour
     {
         if (File.Exists(HitCountFile))
         {
-            string textFileWriteAllText = File.ReadAllText(HitCountFile);
-            hitCount = Int32.Parse(textFileWriteAllText);
+            var fileContent = File.ReadAllText(HitCountFile);
+            hitCount = Int32.Parse(fileContent);
         }
     }
 
