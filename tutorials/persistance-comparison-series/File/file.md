@@ -334,7 +334,7 @@ In this tutorial we learned how to utilize `File` to save data. `JsonUtility` he
 
 What are the down sides though?
 
-First of, we open, write to and save the file every single time the capsule it clicked. While not a problem in this case and certainly applicable for some games this will not perform very well when many save operations are made.
+First of all, we open, write to, and save the file every single time the capsule it clicked. While not a problem in this case and certainly applicable for some games this will not perform very well when many save operations are made.
 
 Also, the data is saved in plain text and can easily be edited by the player.
 
