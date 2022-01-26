@@ -34,8 +34,8 @@ public class PlayerPrefsExampleJson : MonoBehaviour
         if (PlayerPrefs.HasKey(HitCountKey))
         {
             // 6
-            string jsonString = PlayerPrefs.GetString(HitCountKey);
-            HitCount hitCount = JsonUtility.FromJson<HitCount>(jsonString);
+            var jsonString = PlayerPrefs.GetString(HitCountKey);
+            var hitCount = JsonUtility.FromJson<HitCount>(jsonString);
 
             // 7
             if (hitCount != null)
@@ -93,7 +93,7 @@ public class PlayerPrefsExampleJson : MonoBehaviour
         hitCount.Control = hitCountControl;
 
         // 18
-        string jsonString = JsonUtility.ToJson(hitCount);
+        var jsonString = JsonUtility.ToJson(hitCount);
         PlayerPrefs.SetString(HitCountKey, jsonString);
         PlayerPrefs.Save();
     }
