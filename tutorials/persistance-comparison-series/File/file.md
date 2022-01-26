@@ -139,7 +139,7 @@ Let's look into extending this simple example in the next section.
 
 (see `FileExampleExtended.cs` in the repository for the finished version)
 
-The previous section has shown the most simple example, using just one variable that needs to be saved. What if we want to save more than that?
+The previous section has shown the simplest example, using just one variable that needs to be saved. What if we want to save more than that?
 
 Depending on what needs to saved there are several different approaches. You could use multiple files or you can write multiple lines inside the same file. The latter shall be shown in this section by extending the game to recognize modifier keys. We want to detect normal clicks, Shift+Click and Control+Click.
 
