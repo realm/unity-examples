@@ -11,7 +11,7 @@ public class FileExampleExtended : MonoBehaviour
     [SerializeField] private int hitCountShift = 0;
     [SerializeField] private int hitCountControl = 0;
 
-    private KeyCode keyPressed = default;
+    private KeyCode modifier = default;
 
     private const string HitCountFileUnmodified = "hitCountFileExtended.txt";
 
@@ -40,29 +40,29 @@ public class FileExampleExtended : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftShift)) // 2
         {
             // Set the LeftShift key.
-            keyPressed = KeyCode.LeftShift; // 3
+            modifier = KeyCode.LeftShift; // 3
         }
         else if (Input.GetKey(KeyCode.LeftControl)) // 2
         {
             // Set the LeftControl key.
-            keyPressed = KeyCode.LeftControl; // 3
+            modifier = KeyCode.LeftControl; // 3
         }
         else // 4
         {
             // In any other case reset to default and consider it unmodified.
-            keyPressed = default; // 5
+            modifier = default; // 5
         }
     }
 
     private void OnMouseDown() // 6
     {
         // Check if a key was pressed.
-        if (keyPressed == KeyCode.LeftShift) // 7
+        if (modifier == KeyCode.LeftShift) // 7
         {
             // Increment the Shift hit count.
             hitCountShift++; // 8
         }
-        else if (keyPressed == KeyCode.LeftControl) // 7
+        else if (modifier == KeyCode.LeftControl) // 7
         {
             // Increment the Control hit count.
             hitCountControl++; // 8

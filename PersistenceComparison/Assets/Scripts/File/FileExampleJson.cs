@@ -19,7 +19,7 @@ public class FileExampleJson : MonoBehaviour
     [SerializeField] private int hitCountShift = 0;
     [SerializeField] private int hitCountControl = 0;
 
-    private KeyCode keyPressed = default;
+    private KeyCode modifier = default;
 
     private const string HitCountFileJson = "hitCountFileJson.txt";
 
@@ -45,17 +45,17 @@ public class FileExampleJson : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftShift))
         {
             // Set the LeftShift key.
-            keyPressed = KeyCode.LeftShift;
+            modifier = KeyCode.LeftShift;
         }
         else if (Input.GetKey(KeyCode.LeftControl))
         {
             // Set the LeftControl key.
-            keyPressed = KeyCode.LeftControl;
+            modifier = KeyCode.LeftControl;
         }
         else
         {
             // In any other case reset to default and consider it unmodified.
-            keyPressed = default;
+            modifier = default;
         }
     }
 
@@ -63,12 +63,12 @@ public class FileExampleJson : MonoBehaviour
     {
         // 1
         // Check if a key was pressed.
-        if (keyPressed == KeyCode.LeftShift)
+        if (modifier == KeyCode.LeftShift)
         {
             // Increment the Shift hit count.
             hitCountShift++;
         }
-        else if (keyPressed == KeyCode.LeftControl)
+        else if (modifier == KeyCode.LeftControl)
         {
             // Increment the Control hit count.
             hitCountControl++;

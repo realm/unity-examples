@@ -160,14 +160,14 @@ private const string HitCountFileUnmodified = "hitCountFileExtended.txt";
 The last field we need to define is the key that is pressed:
 
 ```cs
-private KeyCode keyPressed = default;
+private KeyCode modifier = default;
 ```
 
 The first thing we need to do is check if a key was pressed and which key it was. Unity offers an easy way to achieve this using the [`Input`](https://docs.unity3d.com/ScriptReference/Input.html) class's `GetKey` function. It checks if the given key was pressed or not. You can pass in the string for the key or to be a bit more safe, just use the `KeyCode` enum. We cannot use this in the `OnMouseClick()` when detecting the mouse click though:
 
 > Note: Input flags are not reset until Update. You should make all the Input calls in the Update Loop.
 
-Add a new method called `Update()` (1) which is called in every frame. Here we need to check if the `Shift` or `Control` key was pressed (2) and if so, save the corresponding key in `keyPressed` (3). In case none of those keys was pressed (4) we consider it unmodified and reset `keyPressed` to its `default` (5).
+Add a new method called `Update()` (1) which is called in every frame. Here we need to check if the `Shift` or `Control` key was pressed (2) and if so, save the corresponding key in `modifier` (3). In case none of those keys was pressed (4) we consider it unmodified and reset `modifier` to its `default` (5).
 
 ```cs
 private void Update() // 1
@@ -176,17 +176,17 @@ private void Update() // 1
     if (Input.GetKey(KeyCode.LeftShift)) // 2
     {
         // Set the LeftShift key.
-        keyPressed = KeyCode.LeftShift; // 3
+        modifier = KeyCode.LeftShift; // 3
     }
     else if (Input.GetKey(KeyCode.LeftControl)) // 2
     {
         // Set the LeftControl key.
-        keyPressed = KeyCode.LeftControl; // 3
+        modifier = KeyCode.LeftControl; // 3
     }
     else // 4
     {
         // In any other case reset to default and consider it unmodified.
-        keyPressed = default; // 5
+        modifier = default; // 5
     }
 }
 ```
@@ -197,12 +197,12 @@ Now to saving the data when a click happens:
 private void OnMouseDown() // 6
 {
     // Check if a key was pressed.
-    if (keyPressed == KeyCode.LeftShift) // 7
+    if (modifier == KeyCode.LeftShift) // 7
     {
         // Increment the Shift hit count.
         hitCountShift++; // 8
     }
-    else if (keyPressed == KeyCode.LeftControl) // 7
+    else if (modifier == KeyCode.LeftControl) // 7
     {
         // Increment the Control hit count.
         hitCountControl++; // 8
@@ -227,9 +227,9 @@ private void OnMouseDown() // 6
 }
 ```
 
-Whenever a mouse click is detected on the capsule (6) we can then perform a similar check to what happened in `Update()` only that we use `keyPressed` instead of `Input.GetKey()` here.
+Whenever a mouse click is detected on the capsule (6) we can then perform a similar check to what happened in `Update()` only that we use `modifier` instead of `Input.GetKey()` here.
 
-Check if `keyPressed` was set to `KeyCode.LeftShift` or `KeyCode.LeftControl` (7) and if so, increment the corresponding hit count (8). If no modifier was used (9), increment the `hitCountUnmodified`.
+Check if `modifier` was set to `KeyCode.LeftShift` or `KeyCode.LeftControl` (7) and if so, increment the corresponding hit count (8). If no modifier was used (9), increment the `hitCountUnmodified`.
 
 As seen in the last section we need to create a string that can be saved in the file. There is a second function on `File` that accepts a a string array and then saves each entry in one line: `WriteAllLines()`.
 
@@ -285,12 +285,12 @@ private void OnMouseDown()
 {
     // 1
     // Check if a key was pressed.
-    if (keyPressed == KeyCode.LeftShift)
+    if (modifier == KeyCode.LeftShift)
     {
         // Increment the Shift hit count.
         hitCountShift++;
     }
-    else if (keyPressed == KeyCode.LeftControl)
+    else if (modifier == KeyCode.LeftControl)
     {
         // Increment the Control hit count.
         hitCountControl++;
