@@ -67,7 +67,7 @@ public class HitCountExample : MonoBehaviour
 
 ```
 
-The first thing we need to add is a counter for the clicks on the capsule (1). Add a `[SerilizeField]` here so that you can observe it while clicking on the capsule in the Unity editor.
+The first thing we need to add is a counter for the clicks on the capsule (1). Add a `[SerializeField]` here so that you can observe it while clicking on the capsule in the Unity editor.
 
 Whenever the game starts (2) we want to read the current hit count from the persistence and initialize `hitCount` accordingly (3). This is done in the `Start()` method that is called whenever a scene is loaded for each game object this script is attached to.
 
@@ -137,7 +137,7 @@ In addition to the basic structure we also need to define a key (1) that will be
 
 When the game starts we first want to check if there was already a hit count saved. The `PlayerPrefs` have a built-in function `HasKey(hitCountKey)` (2) that let's us achieve exactly this. If the key exists we read it using `GetInt(hitCountKey)` (3) and save it in the counter.
 
-The second part is saving data whenever it changes. On each click after we incremented the `hitCount` we have to call `SetInt(key, value)` on `PlayerPrefs` (4) to set the new data. Note that this does not save the data to disk. This only happens during `OnApplicationQuit()` implicitly. We can explicitly write the data to disk at any time to avoid loosing data in case the game crashes and `OnApplicationQuit()` never gets called.
+The second part is saving data whenever it changes. On each click after we incremented the `hitCount` we have to call `SetInt(key, value)` on `PlayerPrefs` (4) to set the new data. Note that this does not save the data to disk. This only happens during `OnApplicationQuit()` implicitly. We can explicitly write the data to disk at any time to avoid losing data in case the game crashes and `OnApplicationQuit()` never gets called.
 To write the data to disk we call `Save()` (5).
 
 ## Extended example
