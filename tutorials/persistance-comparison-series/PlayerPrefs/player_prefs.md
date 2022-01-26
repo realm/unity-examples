@@ -284,9 +284,9 @@ In the previous two sections we have seen how to handle two simple examples of p
 
 One possible approach would be to use the fact that `PlayerPrefs` can hold a `string` and save a `JSON` in there.
 
-First we need to figure out how to actually transform our data into JSON. The .NET framework as well as the `UnityEngine` framework offer a JSON serializer and deserializer to do this job for us. Both behave very similar but we will use Unity's own [`JsonUtility`](https://docs.unity3d.com/ScriptReference/JsonUtility.html) which [performs better in Unity than other similar JSON solutions](https://docs.unity3d.com/Manual/JSONSerialization.html).
+First we need to figure out how to actually transform our data into JSON. The .NET framework as well as the `UnityEngine` framework offer a JSON serialize and deserializer to do this job for us. Both behave very similar but we will use Unity's own [`JsonUtility`](https://docs.unity3d.com/ScriptReference/JsonUtility.html) which [performs better in Unity than other similar JSON solution](https://docs.unity3d.com/Manual/JSONSerialization.html).
 
-To transform data to JSON we first need to create a container object. This has [some restrictions](https://docs.unity3d.com/ScriptReference/JsonUtility.ToJson.html):
+To transform data to JSON we first need to create a container object. This has [some restriction](https://docs.unity3d.com/ScriptReference/JsonUtility.ToJson.html):
 
 > Internally, this method uses the Unity serializer; therefore the object you pass in must be supported by the serializer: it must be a MonoBehaviour, ScriptableObject, or plain class/struct with the Serializable attribute applied. The types of fields that you want to be included must be supported by the serializer; unsupported fields will be ignored, as will private fields, static fields, and fields with the NonSerialized attribute applied.
 
@@ -420,7 +420,7 @@ Remember to also call `Save()` here to make sure data cannot get lost in case th
 
 Run the game and after you clicked the capsule a couple of time with or without Shift and Control, have a look at the result. The following screenshot shows the Windows registry which is where the `PlayerPrefs` get saved.
 
-The location is `HKEY_CURRENT_USER\SOFTWARE\Unity\UnityEditor\MongoDB Inc.\UnityPersistenceExample` and as you can see our JSON is right there, saved in plain text. Which is also one of the big down sides to keep in mind when using `PlayerPrefs`: data is not save and can easily be edited.
+The location when using our example project is `HKEY_CURRENT_USER\SOFTWARE\Unity\UnityEditor\MongoDB Inc.\UnityPersistenceExample` and as you can see our JSON is right there, saved in plain text. Which is also one of the big down sides to keep in mind when using `PlayerPrefs`: data is not safe and can easily be edited.
 
 <img src="images/06_json_in_registry.jpg" alt="JSON in registry"/>
 
