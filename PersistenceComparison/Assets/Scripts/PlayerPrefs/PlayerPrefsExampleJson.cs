@@ -87,13 +87,15 @@ public class PlayerPrefsExampleJson : MonoBehaviour
         }
 
         // 17
-        HitCount hitCount = new();
-        hitCount.Unmodified = hitCountUnmodified;
-        hitCount.Shift = hitCountShift;
-        hitCount.Control = hitCountControl;
+        var updatedCount = new HitCount
+        {
+            Unmodified = hitCountUnmodified,
+            Shift = hitCountShift,
+            Control = hitCountControl,
+        };
 
         // 18
-        var jsonString = JsonUtility.ToJson(hitCount);
+        var jsonString = JsonUtility.ToJson(updatedCount);
         PlayerPrefs.SetString(HitCountKey, jsonString);
         PlayerPrefs.Save();
     }
