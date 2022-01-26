@@ -24,7 +24,7 @@ The repository can be found at https://github.com/realm/unity-examples with this
 
 The goal of this tutorial series is to show you a quick and easy way to make some first steps in the various ways to persist data in your game.
 
-Therefore the example we will be using will be as simply as possible in the editor itself so that we can fully focus on the actual code we need to write.
+Therefore the example we will be using will be as simple as possible in the editor itself so that we can fully focus on the actual code we need to write.
 
 <img src="images/01_capsule_in_scene.jpg" alt="Capsule in scene" width="500"/>
 
@@ -67,7 +67,7 @@ public class HitCountExample : MonoBehaviour
 
 ```
 
-The first thing we need to add is a counter for the clicks on the capsule (1). Add a `[SerilizeField]` here so that you can observe it while clicking on the capsule in the Unity editor.
+The first thing we need to add is a counter for the clicks on the capsule (1). Add a `[SerializeField]` here so that you can observe it while clicking on the capsule in the Unity editor.
 
 Whenever the game starts (2) we want to read the current hit count from the persistence and initialize `hitCount` accordingly (3). This is done in the `Start()` method that is called whenever a scene is loaded for each game object this script is attached to.
 
@@ -137,7 +137,7 @@ In addition to the basic structure we also need to define a key (1) that will be
 
 When the game starts we first want to check if there was already a hit count saved. The `PlayerPrefs` have a built-in function `HasKey(hitCountKey)` (2) that let's us achieve exactly this. If the key exists we read it using `GetInt(hitCountKey)` (3) and save it in the counter.
 
-The second part is saving data whenever it changes. On each click after we incremented the `hitCount` we have to call `SetInt(key, value)` on `PlayerPrefs` (4) to set the new data. Note that this does not save the data to disk. This only happens during `OnApplicationQuit()` implicitly. We can explicitly write the data to disk at any time to avoid loosing data in case the game crashes and `OnApplicationQuit()` never gets called.
+The second part is saving data whenever it changes. On each click after we incremented the `hitCount` we have to call `SetInt(key, value)` on `PlayerPrefs` (4) to set the new data. Note that this does not save the data to disk. This only happens during `OnApplicationQuit()` implicitly. We can explicitly write the data to disk at any time to avoid losing data in case the game crashes and `OnApplicationQuit()` never gets called.
 To write the data to disk we call `Save()` (5).
 
 ## Extended example
@@ -173,7 +173,7 @@ There are many different ways to save more complex data. Here we will be using t
 One more field we need to save is the `KeyCode` for the key that was pressed:
 
 ```cs
-private KeyCode keyPressed = default;
+private KeyCode modifier = default;
 ```
 
 When starting the scene, loading the data looks similar to the previous example, just extended by two more calls:
@@ -208,11 +208,11 @@ The documentation tells us about one important fact though:
 
 > Note: Input flags are not reset until Update. You should make all the Input calls in the Update Loop.
 
-Therefore we also need to implement the [`Update()`](https://docs.unity3d.com/ScriptReference/MonoBehaviour.Update.html) function (6) where we check for the key and save it in the previously defined `keyPressed`.
+Therefore we also need to implement the [`Update()`](https://docs.unity3d.com/ScriptReference/MonoBehaviour.Update.html) function (6) where we check for the key and save it in the previously defined `modifier`.
 
 The keys can be addressed via their name as string but the type safe way to do this is to use the class `KeyCode` which defines every key necessary. For our case this would be `KeyCode.LeftShift` and `KeyCode.LeftControl`.
 
-Those checks use `Input.GetKey()` (7) and if one of the two was found, it will be saved as the `keyPressed` (8). If neither of them was pressed (9) we just reset `keyPressed` to the `default` (10) which we will use as a marker for an unmodified mouse click.
+Those checks use `Input.GetKey()` (7) and if one of the two was found, it will be saved as the `modifier` (8). If neither of them was pressed (9) we just reset `modifier` to the `default` (10) which we will use as a marker for an unmodified mouse click.
 
 ```cs
 private void Update() // 6
@@ -221,17 +221,17 @@ private void Update() // 6
     if (Input.GetKey(KeyCode.LeftShift)) // 7
     {
         // Set the LeftShift key.
-        keyPressed = KeyCode.LeftShift; // 8
+        modifier = KeyCode.LeftShift; // 8
     }
     else if (Input.GetKey(KeyCode.LeftControl)) // 7
     {
         // Set the LeftControl key.
-        keyPressed = KeyCode.LeftControl; // 8
+        modifier = KeyCode.LeftControl; // 8
     }
     else // 9
     {
         // In any other case reset to default and consider it unmodified.
-        keyPressed = default; // 10
+        modifier = default; // 10
     }
 }
 ```
@@ -242,23 +242,23 @@ The same triplet can then also be found in the click detection:
 private void OnMouseDown()
 {
     // Check if a key was pressed.
-    if (keyPressed == KeyCode.LeftShift) // 11
+    switch (modifier)
     {
-        // Increment the hit count and set it to PlayerPrefs.
-        hitCountShift++; // 12
-        PlayerPrefs.SetInt(HitCountKeyShift, hitCountShift); // 15
-    }
-    else if (keyPressed == KeyCode.LeftControl) // 11
-    {
-        // Increment the hit count and set it to PlayerPrefs.
-        hitCountControl++; // 12
-        PlayerPrefs.SetInt(HitCountKeyControl, hitCountControl); // 15
-    }
-    else // 13
-    {
-        // Increment the hit count and set it to PlayerPrefs.
-        hitCountUnmodified++; // 14
-        PlayerPrefs.SetInt(HitCountKeyUnmodified, hitCountUnmodified); // 15
+        case KeyCode.LeftShift: // 11
+            // Increment the hit count and set it to PlayerPrefs.
+            hitCountShift++; // 12
+            PlayerPrefs.SetInt(HitCountKeyShift, hitCountShift); // 15
+            break;
+        case KeyCode.LeftCommand: // 11
+            // Increment the hit count and set it to PlayerPrefs.
+            hitCountControl++; // 
+            PlayerPrefs.SetInt(HitCountKeyControl, hitCountControl); // 15
+            break;
+        default: // 13
+            // Increment the hit count and set it to PlayerPrefs.
+            hitCountUnmodified++; // 14
+            PlayerPrefs.SetInt(HitCountKeyUnmodified, hitCountUnmodified); // 15
+            break;
     }
 
     // Persist the data to disk.
@@ -318,11 +318,11 @@ All those will eventually be saved into the same `PlayerPrefs` field which means
 private readonly string hitCountKey = "HitCountKeyJson";
 ```
 
-As before, the `keyPressed` will indicate which modifier was used:
+As before, the `modifier` will indicate which modifier was used:
 
 ```cs
 // 4
-private KeyCode keyPressed = default;
+private KeyCode modifier = default;
 ```
 
 In `Start()` we then need to read the JSON. As before, we check if the `PlayerPrefs` key exists (5) and then read the data, this time using `GetString()` (as opposed to `GetInt()` before).
@@ -362,17 +362,17 @@ private void Update() // 8
     if (Input.GetKey(KeyCode.LeftShift)) // 9
     {
         // Set the LeftShift key.
-        keyPressed = KeyCode.LeftShift; // 10
+        modifier = KeyCode.LeftShift; // 10
     }
     else if (Input.GetKey(KeyCode.LeftControl)) // 9
     {
         // Set the LeftControl key.
-        keyPressed = KeyCode.LeftControl; // 10
+        modifier = KeyCode.LeftControl; // 10
     }
     else // 11
     {
         // In any other case reset to default and consider it unmodified.
-        keyPressed = default; // 12
+        modifier = default; // 12
     }
 }
 ```
@@ -382,27 +382,30 @@ In a very similar fashion `OnMouseDown()` needs to save the data whenever it's c
 ```cs
 private void OnMouseDown()
 {
-    if (keyPressed == KeyCode.LeftShift) // 13
+    // Check if a key was pressed.
+    switch (modifier)
     {
-        // Increment the hit count and set it to PlayerPrefs.
-        hitCountShift++; // 14
-    }
-    else if (keyPressed == KeyCode.LeftControl) // 13
-    {
-        // Increment the hit count and set it to PlayerPrefs.
-        hitCountControl++; // 14
-    }
-    else // 15
-    {
-        // Increment the hit count and set it to PlayerPrefs.
-        hitCountUnmodified++; // 16
+        case KeyCode.LeftShift: // 13
+            // Increment the hit count and set it to PlayerPrefs.
+            hitCountShift++; // 14
+            break;
+        case KeyCode.LeftCommand: // 13
+            // Increment the hit count and set it to PlayerPrefs.
+            hitCountControl++; // 14
+            break;
+        default: // 15
+            // Increment the hit count and set it to PlayerPrefs.
+            hitCountUnmodified++; // 16
+            break;
     }
 
     // 17
-    HitCount hitCount = new();
-    hitCount.Unmodified = hitCountUnmodified;
-    hitCount.Shift = hitCountShift;
-    hitCount.Control = hitCountControl;
+    var updatedCount = new HitCount
+    { 
+        Unmodified = hitCountUnmodified,
+        Shift = hitCountShift,
+        Control = hitCountControl,
+    };
 
     // 18
     string jsonString = JsonUtility.ToJson(hitCount);
@@ -419,7 +422,7 @@ Remember to also call `Save()` here to make sure data cannot get lost in case th
 
 Run the game and after you clicked the capsule a couple of time with or without Shift and Control, have a look at the result. The following screenshot shows the Windows registry which is where the `PlayerPrefs` get saved.
 
-The location is `HKEY_CURRENT_USER\SOFTWARE\Unity\UnityEditor\MongoDB Inc.\UnityPersistenceExample` and as you can see our JSON is right there, saved in plain text. Which is also one of the big down sides to keep in mind when using `PlayerPrefs`: data is not save and can easily be edited.
+The location when using our example project is `HKEY_CURRENT_USER\SOFTWARE\Unity\UnityEditor\MongoDB Inc.\UnityPersistenceExample` and as you can see our JSON is right there, saved in plain text. Which is also one of the big down sides to keep in mind when using `PlayerPrefs`: data is not safe and can easily be edited.
 
 <img src="images/06_json_in_registry.jpg" alt="JSON in registry"/>
 
