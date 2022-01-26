@@ -61,23 +61,23 @@ public class PlayerPrefsExampleExtended : MonoBehaviour
     private void OnMouseDown()
     {
         // Check if a key was pressed.
-        if (modifier == KeyCode.LeftShift) // 11
+        switch (modifier)
         {
-            // Increment the hit count and set it to PlayerPrefs.
-            hitCountShift++; // 12
-            PlayerPrefs.SetInt(HitCountKeyShift, hitCountShift); // 15
-        }
-        else if (modifier == KeyCode.LeftControl) // 11
-        {
-            // Increment the hit count and set it to PlayerPrefs.
-            hitCountControl++; // 
-            PlayerPrefs.SetInt(HitCountKeyControl, hitCountControl); // 15
-        }
-        else // 13
-        {
-            // Increment the hit count and set it to PlayerPrefs.
-            hitCountUnmodified++; // 14
-            PlayerPrefs.SetInt(HitCountKeyUnmodified, hitCountUnmodified); // 15
+            case KeyCode.LeftShift: // 11
+                // Increment the hit count and set it to PlayerPrefs.
+                hitCountShift++; // 12
+                PlayerPrefs.SetInt(HitCountKeyShift, hitCountShift); // 15
+                break;
+            case KeyCode.LeftCommand: // 11
+                // Increment the hit count and set it to PlayerPrefs.
+                hitCountControl++; // 
+                PlayerPrefs.SetInt(HitCountKeyControl, hitCountControl); // 15
+                break;
+            default: // 13
+                // Increment the hit count and set it to PlayerPrefs.
+                hitCountUnmodified++; // 14
+                PlayerPrefs.SetInt(HitCountKeyUnmodified, hitCountUnmodified); // 15
+                break;
         }
 
         // Persist the data to disk.

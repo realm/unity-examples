@@ -69,20 +69,21 @@ public class PlayerPrefsExampleJson : MonoBehaviour
 
     private void OnMouseDown()
     {
-        if (modifier == KeyCode.LeftShift) // 13
+        // Check if a key was pressed.
+        switch (modifier)
         {
-            // Increment the hit count and set it to PlayerPrefs.
-            hitCountShift++; // 14
-        }
-        else if (modifier == KeyCode.LeftControl) // 13
-        {
-            // Increment the hit count and set it to PlayerPrefs.
-            hitCountControl++; // 14
-        }
-        else // 15
-        {
-            // Increment the hit count and set it to PlayerPrefs.
-            hitCountUnmodified++; // 16
+            case KeyCode.LeftShift: // 13
+                // Increment the hit count and set it to PlayerPrefs.
+                hitCountShift++; // 14
+                break;
+            case KeyCode.LeftCommand: // 13
+                // Increment the hit count and set it to PlayerPrefs.
+                hitCountControl++; // 14
+                break;
+            default: // 15
+                // Increment the hit count and set it to PlayerPrefs.
+                hitCountUnmodified++; // 16
+                break;
         }
 
         // 17

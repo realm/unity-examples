@@ -242,23 +242,23 @@ The same triplet can then also be found in the click detection:
 private void OnMouseDown()
 {
     // Check if a key was pressed.
-    if (modifier == KeyCode.LeftShift) // 11
+    switch (modifier)
     {
-        // Increment the hit count and set it to PlayerPrefs.
-        hitCountShift++; // 12
-        PlayerPrefs.SetInt(HitCountKeyShift, hitCountShift); // 15
-    }
-    else if (modifier == KeyCode.LeftControl) // 11
-    {
-        // Increment the hit count and set it to PlayerPrefs.
-        hitCountControl++; // 12
-        PlayerPrefs.SetInt(HitCountKeyControl, hitCountControl); // 15
-    }
-    else // 13
-    {
-        // Increment the hit count and set it to PlayerPrefs.
-        hitCountUnmodified++; // 14
-        PlayerPrefs.SetInt(HitCountKeyUnmodified, hitCountUnmodified); // 15
+        case KeyCode.LeftShift: // 11
+            // Increment the hit count and set it to PlayerPrefs.
+            hitCountShift++; // 12
+            PlayerPrefs.SetInt(HitCountKeyShift, hitCountShift); // 15
+            break;
+        case KeyCode.LeftCommand: // 11
+            // Increment the hit count and set it to PlayerPrefs.
+            hitCountControl++; // 
+            PlayerPrefs.SetInt(HitCountKeyControl, hitCountControl); // 15
+            break;
+        default: // 13
+            // Increment the hit count and set it to PlayerPrefs.
+            hitCountUnmodified++; // 14
+            PlayerPrefs.SetInt(HitCountKeyUnmodified, hitCountUnmodified); // 15
+            break;
     }
 
     // Persist the data to disk.
@@ -382,20 +382,21 @@ In a very similar fashion `OnMouseDown()` needs to save the data whenever it's c
 ```cs
 private void OnMouseDown()
 {
-    if (modifier == KeyCode.LeftShift) // 13
+    // Check if a key was pressed.
+    switch (modifier)
     {
-        // Increment the hit count and set it to PlayerPrefs.
-        hitCountShift++; // 14
-    }
-    else if (modifier == KeyCode.LeftControl) // 13
-    {
-        // Increment the hit count and set it to PlayerPrefs.
-        hitCountControl++; // 14
-    }
-    else // 15
-    {
-        // Increment the hit count and set it to PlayerPrefs.
-        hitCountUnmodified++; // 16
+        case KeyCode.LeftShift: // 13
+            // Increment the hit count and set it to PlayerPrefs.
+            hitCountShift++; // 14
+            break;
+        case KeyCode.LeftCommand: // 13
+            // Increment the hit count and set it to PlayerPrefs.
+            hitCountControl++; // 14
+            break;
+        default: // 15
+            // Increment the hit count and set it to PlayerPrefs.
+            hitCountUnmodified++; // 16
+            break;
     }
 
     // 17
