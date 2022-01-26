@@ -139,7 +139,7 @@ Let's look into extending this simple example in the next section.
 
 (see `FileExampleExtended.cs` in the repository for the finished version)
 
-The previous section has shown the simplest example, using just one variable that needs to be saved. What if we want to save more than that?
+The previous section has shown the most simple example, using just one variable that needs to be saved. What if we want to save more than that?
 
 Depending on what needs to saved there are several different approaches. You could use multiple files or you can write multiple lines inside the same file. The latter shall be shown in this section by extending the game to recognize modifier keys. We want to detect normal clicks, Shift+Click and Control+Click.
 
@@ -243,7 +243,9 @@ After stopping the game and therefore saving the data a new file `hitCountFileEx
 
 <img src="images/08_hit_count_extended_file.jpg" alt="File hitCountExtended.txt" width=""/>
 
-As long as all the data saved to those lines belongs together, the file can be one option. If you have several different properties you might create multiple files. Alternatively you can save all the data into the same file using a bit of structure. One of the possible approaches to structuring your data will be shown in the next section.
+As long as all the data saved to those lines belongs together, the file can be one option. If you have several different properties you might create multiple files. Alternatively you can save all the data into the same file using a bit of structure. Note though that the numbers will not be associated with the properties. If the structure of the object changes, we would need to migrate the file as well and take this into account the next time we open and read the file.
+
+Another possible approach to structuring your data will be shown in the next section using JSON.
 
 ## More complex data
 
@@ -334,11 +336,11 @@ In this tutorial we learned how to utilize `File` to save data. `JsonUtility` he
 
 What are the down sides though?
 
-First of all, we open, write to, and save the file every single time the capsule it clicked. While not a problem in this case and certainly applicable for some games this will not perform very well when many save operations are made.
+First of, we open, write to and save the file every single time the capsule it clicked. While not a problem in this case and certainly applicable for some games this will not perform very well when many save operations are made.
 
 Also, the data is saved in plain text and can easily be edited by the player.
 
-The more complex your data is, the more complex it will be to actually maintain this approach. What if the structure of the `HitCount` object changes? You have to account for that when loading an older version of the JSON. Migrations are necessary.
+The more complex your data is, the more complex it will be to actually maintain this approach. What if the structure of the `HitCount` object changes? You have to change account for that when loading an older version of the JSON. Migrations are necessary.
 
 In the following tutorials we will (among others) have a look at how databases can make this job a lot easier and take care of the problems we face here.
 
