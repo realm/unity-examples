@@ -81,14 +81,16 @@ public class FileExampleJson : MonoBehaviour
 
         // 2
         // Create a new HitCount object to hold this data.
-        HitCount hitCount = new();
-        hitCount.Unmodified = hitCountUnmodified;
-        hitCount.Shift = hitCountShift;
-        hitCount.Control = hitCountControl;
+        var updatedCount = new HitCount
+        {
+            Unmodified = hitCountUnmodified,
+            Shift = hitCountShift,
+            Control = hitCountControl,
+        };
 
         // 3
         // Create a JSON using the HitCount object.
-        var jsonString = JsonUtility.ToJson(hitCount, true);
+        var jsonString = JsonUtility.ToJson(updatedCount, true);
 
         // 4
         // Save the json to the file.
