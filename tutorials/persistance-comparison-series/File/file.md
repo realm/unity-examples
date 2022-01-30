@@ -230,7 +230,7 @@ Whenever a mouse click is detected on the capsule (6) we can then perform a simi
 
 Check if `modifier` was set to `KeyCode.LeftShift` or `KeyCode.LeftControl` (7) and if so, increment the corresponding hit count (8). If no modifier was used (9), increment the `hitCountUnmodified`.
 
-As seen in the last section we need to create a string that can be saved in the file. There is a second function on `File` that accepts a a string array and then saves each entry in one line: `WriteAllLines()`.
+As seen in the last section we need to create a string that can be saved in the file. There is a second function on `File` that accepts a string array and then saves each entry in one line: `WriteAllLines()`.
 
 Knowing this we create an array containing the three hit counts (11) and pass this one on to `File.WriteAllLines()`.
 
