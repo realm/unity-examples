@@ -76,7 +76,7 @@ public class PlayerPrefsExampleJson : MonoBehaviour
                 // Increment the hit count and set it to PlayerPrefs.
                 hitCountShift++; // 14
                 break;
-            case KeyCode.LeftCommand: // 13
+            case KeyCode.LeftControl: // 13
                 // Increment the hit count and set it to PlayerPrefs.
                 hitCountControl++; // 14
                 break;

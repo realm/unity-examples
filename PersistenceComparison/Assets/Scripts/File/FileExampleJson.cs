@@ -73,7 +73,7 @@ public class FileExampleJson : MonoBehaviour
                 // Increment the Shift hit count.
                 hitCountShift++;
                 break;
-            case KeyCode.LeftCommand:
+            case KeyCode.LeftControl:
                 // Increment the Control hit count.
                 hitCountControl++;
                 break;

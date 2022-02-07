@@ -67,7 +67,7 @@ public class FileExampleExtended : MonoBehaviour
                 // Increment the Shift hit count.
                 hitCountShift++; // 8
                 break;
-            case KeyCode.LeftCommand: // 7
+            case KeyCode.LeftControl: // 7
                 // Increment the Control hit count.
                 hitCountControl++; // 8
                 break;
