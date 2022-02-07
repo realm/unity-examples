@@ -421,9 +421,11 @@ Remember to also call `Save()` here to make sure data cannot get lost in case th
 
 Run the game, and after you've clicked the capsule a couple of times with or without Shift and Control, have a look at the result. The following screenshot shows the Windows registry which is where the `PlayerPrefs` get saved.
 
-The location when using our example project is `HKEY_CURRENT_USER\SOFTWARE\Unity\UnityEditor\MongoDB Inc.\UnityPersistenceExample` and as you can see, our JSON is right there, saved in plain text. This is also one of the big downsides to keep in mind when using `PlayerPrefs`: Data is not safe and can easily be edited.
+The location when using our example project is `HKEY_CURRENT_USER\SOFTWARE\Unity\UnityEditor\MongoDB Inc.\UnityPersistenceExample` and as you can see, our JSON is right there, saved in plain text. This is also one of the big downsides to keep in mind when using `PlayerPrefs`: Data is not safe and can easily be edited when saved in plain text. Watch out for our future tutorial on encryption, which is one option to improve the safety of your data.
 
 <img src="images/06_json_in_registry.jpg" alt="JSON in registry"/>
+
+
 
 ## Conclusion
 
