@@ -393,6 +393,8 @@ When you run the game you will see the that in the editor it looks identical to 
 
 <img src="images/09_hit_count_extended_json.jpg" alt="File hitCountExtended.txt" width=""/>
 
+Note that the data is saved in plain text. In a future tutorial we will look at encryption and how to improve safety of your data.
+
 ## Conclusion
 
 In this tutorial we learned how to utilize `File` to save data. `JsonUtility` helps structure this data. They are simple and easy to use, not much code is required.
