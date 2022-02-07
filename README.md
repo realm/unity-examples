@@ -20,7 +20,7 @@ This tutorial shows how to use local and synced Realms to add persistence to you
 
 In this tutorial series we will explore the options given to us by Unity and third party libraries. Each part will take a deeper look into one of them with the final part being a comparison:
 
-- Part 1: PlayerPrefs *(coming soon)*
+- Part 1: [PlayerPrefs](https://github.com/realm/unity-examples/blob/persistence-comparison/tutorials/persistance-comparison-series/PlayerPrefs/player_prefs.md)
 - Part 2: Files *(coming soon)*
 - Part 3: BinaryReader and BinaryWriter
 - Part 4: SQL
