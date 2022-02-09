@@ -1,14 +1,13 @@
-﻿using UnityEngine;
+using System.IO;
+using UnityEngine;
 
-public class PlayerPrefsExampleJson : MonoBehaviour
+public class FileExampleJson : MonoBehaviour
 {
     // Resources:
     // https://docs.unity3d.com/ScriptReference/JsonUtility.html
     // https://docs.unity3d.com/Manual/script-Serialization.html
     // https://docs.unity3d.com/ScriptReference/Serializable.html
-    // https://docs.unity3d.com/Manual/JSONSerialization.html
 
-    // 1
     private class HitCount
     {
         public int Unmodified;
@@ -16,30 +15,27 @@ public class PlayerPrefsExampleJson : MonoBehaviour
         public int Control;
     }
 
-    // 2
     [SerializeField] private int hitCountUnmodified = 0;
     [SerializeField] private int hitCountShift = 0;
     [SerializeField] private int hitCountControl = 0;
 
-    // 3
-    private const string HitCountKey = "HitCountKeyJson";
-
-    // 4
     private KeyCode modifier = default;
+
+    private const string HitCountFileJson = "hitCountFileJson.txt";
 
     private void Start()
     {
-        // 5
-        // Check if the key exists. If not, we never saved to it.
-        if (PlayerPrefs.HasKey(HitCountKey))
+        // Check if the file exists to avoid errors when opening a non-existing file.
+        if (File.Exists(HitCountFileJson)) // 5
         {
             // 6
-            var jsonString = PlayerPrefs.GetString(HitCountKey);
+            var jsonString = File.ReadAllText(HitCountFileJson);
             var hitCount = JsonUtility.FromJson<HitCount>(jsonString);
 
             // 7
             if (hitCount != null)
             {
+                // 8
                 hitCountUnmodified = hitCount.Unmodified;
                 hitCountShift = hitCount.Shift;
                 hitCountControl = hitCount.Control;
@@ -47,46 +43,48 @@ public class PlayerPrefsExampleJson : MonoBehaviour
         }
     }
 
-    private void Update() // 8
+    private void Update()
     {
         // Check if a key was pressed.
-        if (Input.GetKey(KeyCode.LeftShift)) // 9
+        if (Input.GetKey(KeyCode.LeftShift))
         {
             // Set the LeftShift key.
-            modifier = KeyCode.LeftShift; // 10
+            modifier = KeyCode.LeftShift;
         }
-        else if (Input.GetKey(KeyCode.LeftControl)) // 9
+        else if (Input.GetKey(KeyCode.LeftControl))
         {
             // Set the LeftControl key.
-            modifier = KeyCode.LeftControl; // 10
+            modifier = KeyCode.LeftControl;
         }
-        else // 11
+        else
         {
             // In any other case reset to default and consider it unmodified.
-            modifier = default; // 12
+            modifier = default;
         }
     }
 
     private void OnMouseDown()
     {
+        // 1
         // Check if a key was pressed.
         switch (modifier)
         {
-            case KeyCode.LeftShift: // 13
-                // Increment the hit count and set it to PlayerPrefs.
-                hitCountShift++; // 14
+            case KeyCode.LeftShift:
+                // Increment the Shift hit count.
+                hitCountShift++;
                 break;
-            case KeyCode.LeftControl: // 13
-                // Increment the hit count and set it to PlayerPrefs.
-                hitCountControl++; // 14
+            case KeyCode.LeftControl:
+                // Increment the Control hit count.
+                hitCountControl++;
                 break;
-            default: // 15
-                // Increment the hit count and set it to PlayerPrefs.
-                hitCountUnmodified++; // 16
+            default:
+                // If neither Shift nor Control was held, we increment the unmodified hit count.
+                hitCountUnmodified++;
                 break;
         }
 
-        // 17
+        // 2
+        // Create a new HitCount object to hold this data.
         var updatedCount = new HitCount
         {
             Unmodified = hitCountUnmodified,
@@ -94,9 +92,12 @@ public class PlayerPrefsExampleJson : MonoBehaviour
             Control = hitCountControl,
         };
 
-        // 18
-        var jsonString = JsonUtility.ToJson(updatedCount);
-        PlayerPrefs.SetString(HitCountKey, jsonString);
-        PlayerPrefs.Save();
+        // 3
+        // Create a JSON using the HitCount object.
+        var jsonString = JsonUtility.ToJson(updatedCount, true);
+
+        // 4
+        // Save the json to the file.
+        File.WriteAllText(HitCountFileJson, jsonString);
     }
 }

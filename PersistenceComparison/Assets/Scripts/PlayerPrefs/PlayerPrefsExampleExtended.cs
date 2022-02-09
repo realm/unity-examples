@@ -68,7 +68,7 @@ public class PlayerPrefsExampleExtended : MonoBehaviour
                 hitCountShift++; // 12
                 PlayerPrefs.SetInt(HitCountKeyShift, hitCountShift); // 15
                 break;
-            case KeyCode.LeftCommand: // 11
+            case KeyCode.LeftControl: // 11
                 // Increment the hit count and set it to PlayerPrefs.
                 hitCountControl++; // 
                 PlayerPrefs.SetInt(HitCountKeyControl, hitCountControl); // 15
