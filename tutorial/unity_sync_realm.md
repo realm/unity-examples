@@ -4,13 +4,13 @@
 
 Playing a game locally can be fun at times. But there is nothing more exciting than playing with or against the whole world. Using Realm Sync you can easily synchronize data between multiple instances and turn your local game into an online experience.
 
-In [a previous tutorial](https://github.com/realm/unity-examples-3d-chess/blob/local-realm/tutorial/unity_local_realm.md) we showed how to use Realm locally to persist your game's data. We will build on the local Realm to show how to easily transition to Realm Sync.
+In [a previous tutorial](https://github.com/realm/unity-examples/blob/3d-chess/local-realm/tutorial/unity_local_realm.md) we showed how to use Realm locally to persist your game's data. We will build on the local Realm to show how to easily transition to Realm Sync.
 
 If you have not used local Realms before we recommend working through the previous tutorial first so you can easily follow along here when we build on them.
 
-You can find the local Realm example that this tutorial is based on in [our example repository at Github](https://github.com/realm/unity-examples-3d-chess/tree/local-realm) and use it to follow along.
+You can find the local Realm example that this tutorial is based on in [our example repository at Github](https://github.com/realm/unity-examples/tree/3d-chess/local-realm) and use it to follow along.
 
-The [final of result of this tutorial](https://github.com/realm/unity-examples-3d-chess/tree/sync-realm) can also be found in the examples reposity.
+The [final of result of this tutorial](https://github.com/realm/unity-examples/tree/3d-chess/synced-realm) can also be found in the examples reposity.
 
 ## MongoDB Realm Sync and MongoDB Atlas
 
@@ -28,7 +28,7 @@ There are a couple of things we need to prepare in order to enable synchronisati
 
 ## Example
 
-We will build on the local Realm example we created in the previous tutorial using the 3D chess game. To get you started easily you can find the final result in our [examples reposity](https://github.com/realm/unity-examples-3d-chess/tree/local-realm) (branch: `local-realm`).
+We will build on the local Realm example we created in the previous tutorial using the 3D chess game. To get you started easily you can find the final result in our [examples reposity](https://github.com/realm/unity-examples/tree/3d-chess/local-realm) (branch: `local-realm`).
 
 The local Realm is based on four building blocks:
 
@@ -326,6 +326,6 @@ In this tutorial we have learned how to turn a game with a local Realm into a mu
 - Choose a partition strategy (in this case: use the `partition key` to identify the match)
 - Open a Realm using the `SyncConfiguration` (which incorporates the `App` and `User`)
 
-The code for all of this can be found in [our example repository](https://github.com/realm/unity-examples-3d-chess/tree/sync-realm).
+The code for all of this can be found in [our example repository](https://github.com/realm/unity-examples/tree/3d-chess/synced-realm).
 
 If you have questions, please head to our [developer community website](https://community.mongodb.com) where the MongoDB engineers and the MongoDB community will help you build your next big idea with MongoDB and Realm.
