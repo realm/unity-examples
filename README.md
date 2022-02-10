@@ -8,11 +8,10 @@ In this reposity we show you examples of how you can use Realm to enhance your g
 
 ## 3D Chess
 
-This tutorial shows how to use local and synced Realms to add persistence to your games. It's a fully functional, multi player game and the tutorial will walk you through the whole process from creating a new Unity3D project to the final, playable product.
+This tutorial shows how to use local and synced Realms to add persistence to your games. It's a fully functional, multi player game and the tutorial will walk you through the whole process from creating a new Unity3D project to the final, playable product:
 
-[The first part shows the local Realm](https://github.com/realm/unity-examples/blob/3d-chess/local-realm/tutorial/unity_local_realm.md).
-
-[In the second part we then look at how to turn the local Realm into a synced Realm to connect to other players.](https://github.com/realm/unity-examples/blob/3d-chess/synced-realm/tutorial/unity_sync_realm.md)
+- [The first part shows the local Realm](https://github.com/realm/unity-examples/blob/3d-chess/local-realm/tutorial/unity_local_realm.md).
+- [In the second part we then look at how to turn the local Realm into a synced Realm to connect to other players.](https://github.com/realm/unity-examples/blob/3d-chess/synced-realm/tutorial/unity_sync_realm.md)
 
 ![Chess Board](chess_board.png)
 
