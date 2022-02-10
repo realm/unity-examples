@@ -12,9 +12,9 @@ The first part of this tutorial will describe the example itself. If you are alr
 
 ## Example game
 
-We will be using a simple 3D chess game for demonstration purposes. Creating this game itself will not be part of this tutorial. However, this section will provide you with an overview so that you can follow along and add Realm to the game. This example can be found in [our Unity examples repository](https://github.com/realm/unity-examples-3d-chess/tree/example-template).
+We will be using a simple 3D chess game for demonstration purposes. Creating this game itself will not be part of this tutorial. However, this section will provide you with an overview so that you can follow along and add Realm to the game. This example can be found in [our Unity examples repository](https://github.com/realm/unity-examples/tree/3d-chess/example-template).
 
-The [final implementation of the game](https://github.com/realm/unity-examples-3d-chess/tree/local-realm) including the usage of Realm is also part of the example repository.
+The [final implementation of the game](https://github.com/realm/unity-examples/tree/3d-chess/local-realm) including the usage of Realm is also part of the example repository.
 
 ![Chess Board](images/00_chess_board.png)
 
