@@ -323,6 +323,8 @@ GameObject:
   - component: {fileID: 1910535697}
   - component: {fileID: 1910535698}
   - component: {fileID: 1910535699}
+  - component: {fileID: 1910535700}
+  - component: {fileID: 1910535701}
   m_Layer: 0
   m_Name: Capsule
   m_TagString: Untagged
@@ -546,6 +548,34 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a555cd069f9fe71b480de8a49c4e2778, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitCountUnmodified: 0
+  hitCountShift: 0
+  hitCountControl: 0
+--- !u!114 &1910535700
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1910535675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6de1d831142dbf2f8f4fa3cabe3db91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitCount: 0
+--- !u!114 &1910535701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1910535675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82158982996f94a8cb324377f154cfc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   hitCountUnmodified: 0
