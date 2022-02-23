@@ -78,7 +78,7 @@ The second part to this is saving changes, which we want to do whenever we regis
 
 (See `BinaryReaderWriterExampleSimple.cs` in the repository for the finished version.)
 
-In the previous tutorial we looked at `Files`. This is not the only way to work with data in files locally. Another option that .NET is offering us is the [`BinaryWriter`](https://docs.microsoft.com/en-us/dotnet/api/system.io.binarywriter?view=net-5.0) and [BinaryReader](https://docs.microsoft.com/en-us/dotnet/api/system.io.binaryreader?view=net-5.0).
+In the previous tutorial, we looked at `Files`. This is not the only way to work with data in files locally. Another option that .NET is offering us is the [`BinaryWriter`](https://docs.microsoft.com/en-us/dotnet/api/system.io.binarywriter?view=net-5.0) and [BinaryReader](https://docs.microsoft.com/en-us/dotnet/api/system.io.binaryreader?view=net-5.0).
 
 > The BinaryWriter class provides methods that simplify writing primitive data types to a stream. For example, you can use the Write method to write a Boolean value to the stream as a one-byte value. The class includes write methods that support different data types.
 
@@ -135,13 +135,13 @@ public class BinaryReaderWriterExampleSimple : MonoBehaviour
 
 First we define a name for the file that will hold the data (1). If no additional path is provided, the file will just be saved in the project folder when running the game in the Unity editor or the game folder when running a build. This is fine for the example.
 
-Whenever we click on the capsule (2) and increment the hit count (3), we need to save that change. First, we open the file that is supposed to hold the data (4) by calling `File.Open`. It takes two parameters, the file name which we defined already and a `FileMode`. Since we want to create a new file the `FileMode.Create` option is the right choice here.
+Whenever we click on the capsule (2) and increment the hit count (3), we need to save that change. First, we open the file that is supposed to hold the data (4) by calling `File.Open`. It takes two parameters: the file name, which we defined already, and a `FileMode`. Since we want to create a new file, the `FileMode.Create` option is the right choice here.
 
-Using this `FileStream` we then create a new `BinaryWriter` that takes the stream as an argument (5). After that we can simply write the current `hitCount`  to the file using `Write()` (6).
+Using this `FileStream`, we then create a new `BinaryWriter` that takes the stream as an argument (5). After that, we can simply write the current `hitCount`  to the file using `Write()` (6).
 
-The next time we start the game (7) we check if the file that we saved our data to already exists. If so, it means we have saved data before and can now read it. Once again, we create a new `Filestream` (9) first, this time using the `FileMode.Open` option. To read the data from the file we need to use the `BinaryReader` (10) which also gets initialized with the `FileStream` identical to the `BinaryWriter`.
+The next time we start the game (7), we check if the file that we saved our data to already exists. If so, it means we have saved data before and can now read it. Once again, we create a new `Filestream` (9) first, this time using the `FileMode.Open` option. To read the data from the file, we need to use the `BinaryReader` (10), which also gets initialized with the `FileStream` identical to the `BinaryWriter`.
 
-Finally, using `ReadInt32()` we can read the hit count from the file and assign it to `hitCount`.
+Finally, using `ReadInt32()`, we can read the hit count from the file and assign it to `hitCount`.
 
 Let's look into extending this simple example in the next section.
 
@@ -238,7 +238,7 @@ Whenever a mouse click is detected on the capsule (6), we can then perform a sim
 
 Check if `modifier` was set to `KeyCode.LeftShift` or `KeyCode.LeftControl` (7) and if so, increment the corresponding hit count (8). If no modifier was used (9), increment the `hitCountUnmodified` (10).
 
-Similar to the simple version we create a `FileStream` (11) and with it the `BinaryWriter` (12). Writing multiple variables into the file can simply be achieved by calling `Write()` multiple times (13), once for each hit count that we want to save.
+Similar to the simple version, we create a `FileStream` (11) and with it the `BinaryWriter` (12). Writing multiple variables into the file can simply be achieved by calling `Write()` multiple times (13), once for each hit count that we want to save.
 
 Start the game, and click the capsule using Shift and Control. You should see the three counters in the Inspector.
 
@@ -276,11 +276,11 @@ private void Start() // 14
 
 First, we check if the file even exists (15). If we ever saved data before, this should be the case. If it exists, we read the databy creating a `FileStream` again (16) and opening a `BinaryReader` with it (17). Similar to writing with `Write()` (on the `BinaryWriter`), we use `ReadInt32()` (18) to read an `integer`. We do this three times since we saved them all individually.
 
-Note that knowing the structure of the file is necessary here. If we saved an `integers`, a `boolean` and a `string` we would have to use `ReadInt32()`, `ReadBoolean()` and `ReadString()`.
+Note that knowing the structure of the file is necessary here. If we saved an `integers`, a `boolean`, and a `string`, we would have to use `ReadInt32()`, `ReadBoolean()`, and `ReadString()`.
 
-The more complex data gets to more complicated it will be to make sure there are no mistakes in the structure when reading or writing it. Different types, adding and removing variables, changing the structure. The more data we want to add to this file, the more it makes sense to think about alternatatives. For this tutorial we will stick with the `BinaryReader` and `BinaryWriter` and see what we can do to decrease the complexity a bit when adding more data.
+The more complex data gets, the more complicated it will be to make sure there are no mistakes in the structure when reading or writing it. Different types, adding and removing variables, changing the structure. The more data we want to add to this file, the more it makes sense to think about alternatatives. For this tutorial, we will stick with the `BinaryReader` and `BinaryWriter` and see what we can do to decrease the complexity a bit when adding more data.
 
-One of those option will be shown in the next section.
+One of those options will be shown in the next section.
 
 ## More complex data
 
@@ -397,11 +397,11 @@ private void Start() // 8
 
 We check if the file exists first (9). In case it does, we saved data before and can proceed reading it.
 
-Using a `FileStream` again (10) with `FileMode.Open` we create a `BinaryReader` (11). Since we are reading a json string we need to use `ReadString()` (12) this time and then transform it via `FromJson<HitCount>()` into a `HitCount` object.
+Using a `FileStream` again (10) with `FileMode.Open`, we create a `BinaryReader` (11). Since we are reading a json string, we need to use `ReadString()` (12) this time and then transform it via `FromJson<HitCount>()` into a `HitCount` object.
 
-If this worked out (13) we can then extract `hitCountUnmodified`, `hitCountShift` and `hitCountControl` from it (14).
+If this worked out (13), we can then extract `hitCountUnmodified`, `hitCountShift`, and `hitCountControl` from it (14).
 
-Note that the data is saved a binary format which is of course not safe. Tools to read binary are available and easy to find, for example this the `BinaryReaderWriterExampleJson` file read with `bless` would result in this:
+Note that the data is saved in a binary format, which is, of course, not safe. Tools to read binary are available and easy to find. For example, this `BinaryReaderWriterExampleJson` file read with `bless` would result in this:
 
 <img src="images/09_json_decoded.png" alt="File BinaryReaderWriterExampleJson" width=""/>
 
@@ -415,7 +415,7 @@ In this tutorial, we learned how to utilize `BinaryReader` and `BinaryWriter` to
 
 What are the downsides, though?
 
-First of all, we open, write to, and save the file every single time the capsule is clicked. While not a problem in this case and certainly applicable for some games, this will not perform very well when many save operations are made when you game gets a bit more complex.
+First of all, we open, write to, and save the file every single time the capsule is clicked. While not a problem in this case and certainly applicable for some games, this will not perform very well when many save operations are made when your game gets a bit more complex.
 
 Also, the data is saved in a readable format and can easily be edited by the player.
 
