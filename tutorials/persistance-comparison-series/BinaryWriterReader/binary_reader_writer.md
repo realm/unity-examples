@@ -5,7 +5,7 @@
 
 Persisting data is an important part of most games. Unity offers only a limited set of solutions, which means we have to look around for other options as well.
 
-In Part 1 of this series, we explored Unity's own solution: `PlayerPrefs`. This time, we look into one of the ways we can use the underlying .NET framework by saving files. Here is an overview of the complete series:
+In Part 1 and 2 of this series, we explored Unity's and .NET's own solutions: `PlayerPrefs` and `File`. This time, we look into another way we can use the underlying .NET framework by using the `BinaryReader` and `BinaryWriter`. Here is an overview of the complete series:
 
 - Part 1: [PlayerPrefs](https://github.com/realm/unity-examples/blob/persistence-comparison/tutorials/persistance-comparison-series/PlayerPrefs/player_prefs.md)
 - Part 2: [Files](https://github.com/realm/unity-examples/blob/persistence-comparison/tutorials/persistance-comparison-series/File/file.md)
@@ -72,17 +72,19 @@ The first thing we need to add is a counter for the clicks on the capsule (1). A
 
 Whenever the game starts (2), we want to read the current hit count from the persistence and initialize `hitCount` accordingly (3). This is done in the `Start()` method that is called whenever a scene is loaded for each game object this script is attached to.
 
-The second part to this is saving changes, which we want to do whenever we register a mouse click. The Unity message for this is `OnMouseDown()` (4). This method gets called every time the `GameObject` that this script is attached to is clicked (with a left mouse click). In this case, we increment the `hitCount` (5) which will eventually be saved by the various options shown in this tutorials series.
+The second part to this is saving changes, which we want to do whenever we register a mouse click. The Unity method for this is `OnMouseDown()` (4). This method gets called every time the `GameObject` that this script is attached to is clicked (with a left mouse click). In this case, we increment the `hitCount` (5) which will eventually be saved by the various options shown in this tutorials series.
 
 ## BinaryReader and BinaryWriter
 
 (See `BinaryReaderWriterExampleSimple.cs` in the repository for the finished version.)
 
-In the previous tutorial, we looked at `Files`. This is not the only way to work with data in files locally. Another option that .NET is offering us is the [`BinaryWriter`](https://docs.microsoft.com/en-us/dotnet/api/system.io.binarywriter?view=net-5.0) and [BinaryReader](https://docs.microsoft.com/en-us/dotnet/api/system.io.binaryreader?view=net-5.0).
+In the previous tutorial, we looked at `Files`. This is not the only way to work with data in files locally. Another option that .NET is offering us is the [`BinaryWriter`](https://docs.microsoft.com/en-us/dotnet/api/system.io.binarywriter?view=net-5.0) and [`BinaryReader`](https://docs.microsoft.com/en-us/dotnet/api/system.io.binaryreader?view=net-5.0). From the documentation:
 
 > The BinaryWriter class provides methods that simplify writing primitive data types to a stream. For example, you can use the Write method to write a Boolean value to the stream as a one-byte value. The class includes write methods that support different data types.
 
-Parts of this tutorial will look familiar if you have worked through the previous one. We will use `File` again here to create and open file streams which can then be used by the `BinaryWriter` to save data into those files.
+One important difference here is that the `BinaryWriter` does not write the data in plain text, but in a binary representation instead. This also has the implication that it will use less space then the same data would when using `File` and `FileStream` only.
+
+We will still use the `FileStream` though to open a file (a `FileStream`) that we can then write into using the `BinaryWriter`.
 
 Let's have a look at what we have to change in the example presented in the previous section to save the data using `BinaryWriter` and then read it again using it's opposite `BinaryReader`:
 
@@ -201,7 +203,7 @@ private void Update() // 1
 }
 ```
 
-Now to saving the data when a click happens:
+Now, let's look at saving the data when a click happens:
 
 ```cs
 private void OnMouseDown() // 6
@@ -274,11 +276,11 @@ private void Start() // 14
 }
 ```
 
-First, we check if the file even exists (15). If we ever saved data before, this should be the case. If it exists, we read the databy creating a `FileStream` again (16) and opening a `BinaryReader` with it (17). Similar to writing with `Write()` (on the `BinaryWriter`), we use `ReadInt32()` (18) to read an `integer`. We do this three times since we saved them all individually.
+First, we check if the file even exists (15). If we ever saved data before, this should be the case. If it exists, we read the data by creating a `FileStream` again (16) and opening a `BinaryReader` with it (17). Similar to writing with `Write()` (on the `BinaryWriter`), we use `ReadInt32()` (18) to read an `integer`. We do this three times since we saved them all individually.
 
 Note that knowing the structure of the file is necessary here. If we saved an `integers`, a `boolean`, and a `string`, we would have to use `ReadInt32()`, `ReadBoolean()`, and `ReadString()`.
 
-The more complex data gets, the more complicated it will be to make sure there are no mistakes in the structure when reading or writing it. Different types, adding and removing variables, changing the structure. The more data we want to add to this file, the more it makes sense to think about alternatatives. For this tutorial, we will stick with the `BinaryReader` and `BinaryWriter` and see what we can do to decrease the complexity a bit when adding more data.
+The more complex data gets, the more difficult it will be to make sure there are no mistakes in the structure when reading or writing it. Different types, adding and removing variables, and changing the structure are just some of the changes you might want to make. The more data we want to add to this file, the more it makes sense to think about alternatatives. For this tutorial, we will stick with the `BinaryReader` and `BinaryWriter` and see what we can do to decrease the complexity a bit when adding more data.
 
 One of those options will be shown in the next section.
 
@@ -286,7 +288,7 @@ One of those options will be shown in the next section.
 
 (See `BinaryReaderWriterExampleJson.cs` in the repository for the finished version.)
 
-JSON is a very common approach when saving structured data. It's easy to use and there are frameworks for almost every language. The .NET framework provides a [`JsonSerializer`](https://docs.microsoft.com/en-us/dotnet/api/system.text.json.jsonserializer?view=net-6.0). Unity has its own version of it: [`JsonUtility`](https://docs.unity3d.com/ScriptReference/JsonUtility.html).
+JSON is a very common approach when saving structured data. It's easy to use and there are libraries for almost every language. The .NET framework provides a [`JsonSerializer`](https://docs.microsoft.com/en-us/dotnet/api/system.text.json.jsonserializer?view=net-6.0). Unity has its own version of it: [`JsonUtility`](https://docs.unity3d.com/ScriptReference/JsonUtility.html).
 
 As you can see in the documentation, the functionality boils down to these three methods:
 
@@ -339,7 +341,7 @@ private void OnMouseDown() // 1
 
     // 2
     // Create a new HitCount object to hold this data.
-    var updatedCount = new HitCount
+    var updatedCount = new
     {
         Unmodified = hitCountUnmodified,
         Shift = hitCountShift,
@@ -417,7 +419,7 @@ What are the downsides, though?
 
 First of all, we open, write to, and save the file every single time the capsule is clicked. While not a problem in this case and certainly applicable for some games, this will not perform very well when many save operations are made when your game gets a bit more complex.
 
-Also, the data is saved in a readable format and can easily be edited by the player.
+Also, the data is saved in a readable format and can easily be edited by the player. While the binary file can be viewed and edited to, for example with a hex reader, it is not as easy as opening a simple text file and will at least provide some additional hurdles, no guaranteed safety though.
 
 The more complex your data is, the more complex it will be to actually maintain this approach. What if the structure of the `HitCount` object changes? You have to account for that when loading an older version of the JSON. Migrations are necessary.
 
