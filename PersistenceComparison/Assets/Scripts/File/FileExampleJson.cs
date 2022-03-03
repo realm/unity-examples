@@ -85,7 +85,7 @@ public class FileExampleJson : MonoBehaviour
 
         // 2
         // Create a new HitCount object to hold this data.
-        var updatedCount = new HitCount
+        var updatedCount = new
         {
             Unmodified = hitCountUnmodified,
             Shift = hitCountShift,
