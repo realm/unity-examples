@@ -87,7 +87,7 @@ public class PlayerPrefsExampleJson : MonoBehaviour
         }
 
         // 17
-        var updatedCount = new HitCount
+        var updatedCount = new
         {
             Unmodified = hitCountUnmodified,
             Shift = hitCountShift,
