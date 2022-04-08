@@ -1,11 +1,11 @@
-# Saving Data in Unity3D Using Sqlite
+# Saving Data in Unity3D Using SQLite
 <b>(Part 4 of the Persistence Comparison Series)</b>
 
 ## Introduction
 
-Our journey of exploring options given to use when it comes persistence in Unity will in this part lead to databases. More specificaclly: Sqlite.
+Our journey of exploring options given to use when it comes persistence in Unity will in this part lead to databases. More specificaclly: SQLite.
 
-Sqlite is a C based database that is used in many areas. It has been around for a long time and also found its way into the Unity world. During this tutorial series we have seen options like `PlayerPrefs` in Unity and on the other side `File` and `BinaryWriter`/`BinaryReader` provided by the unterlying .NET framework.
+SQLite is a C based database that is used in many areas. It has been around for a long time and also found its way into the Unity world. During this tutorial series we have seen options like `PlayerPrefs` in Unity and on the other side `File` and `BinaryWriter`/`BinaryReader` provided by the underlying .NET framework.
 
 Here is an overview of the complete series:
 
@@ -16,11 +16,11 @@ Here is an overview of the complete series:
 - Part 5: Realm Unity SDK *(coming soon)*
 - Part 6: Comparison of all those options
 
-Similar to the previous parts, this tutorial can also be found in our [Unity examples repository](the https://github.com/realm/unity-examples) on the [persistence-comparison](https://github.com/realm/unity-examples/tree/persistence-comparison) branch.
+Similar to the previous parts, this tutorial can also be found in our [Unity examples repository](https://github.com/realm/unity-examples) on the [persistence-comparison](https://github.com/realm/unity-examples/tree/persistence-comparison) branch.
 
 <img src="images/00_project_structure.jpg" alt="Capsule in scene" width="250"/>
 
-Each part is sorted into a folder. The three scripts we will be looking at in this tutorial are in the `Sqlite` sub folder. But first, let's look at the example game itself and what we have to prepare in Unity before we can jump into the actual coding.
+Each part is sorted into a folder. The three scripts we will be looking at in this tutorial are in the `SQLite` sub folder. But first, let's look at the example game itself and what we have to prepare in Unity before we can jump into the actual coding.
 
 ## Example game
 
@@ -76,13 +76,13 @@ Whenever the game starts (2), we want to read the current hit count from the per
 
 The second part to this is saving changes, which we want to do whenever we register a mouse click. The Unity message for this is `OnMouseDown()` (4). This method gets called every time the `GameObject` that this script is attached to is clicked (with a left mouse click). In this case, we increment the `hitCount` (5) which will eventually be saved by the various options shown in this tutorials series.
 
-## Sqlite
+## SQLite
 
 (See `SqliteExampleSimple.cs` in the repository for the finished version.)
 
 Now let's make sure our hit count gets persisted so we can continue playing the next time we start the game.
 
-Sqlite is not included per default in a new Unity project and also not available directly via the Unity package manager. We have to install two components to start using it.
+SQLite is not included per default in a new Unity project and also not available directly via the Unity package manager. We have to install two components to start using it.
 
 First, head over to [https://sqlite.org/download.html](https://sqlite.org/download.html) and choose the `Precompiled Binaries` for your operating system. Unzip it and add the two files - `sqlite3.def` and `sqlite3.dll` - to the `Plugin` folder in your Unity project.
 
@@ -98,11 +98,11 @@ In there you will find the file `Mono.Data.Sqlite.dll` which also needs to be mo
 
 Now that the preparations are finished we want to add our first script to the capsule. Similar to the `HitCountExample.cs` create a new `C# script` and name it `SqliteExampleSimple`.
 
-When opening it, the first thing we want to do, is importing Sqlite by adding `using Mono.Data.Sqlite;` and `using System.Data;` at the top of the file (1).
+When opening it, the first thing we want to do, is importing SQLite by adding `using Mono.Data.Sqlite;` and `using System.Data;` at the top of the file (1).
 
-Next we will look at how to save whenever the hit count is changed, which happens during `OnMouseDown()`. Similar to the `FileStream` and the `BinaryWriter` we have seen in the previous parts of this series we need some way to write the data to where it should go. In case of Sqlite that means we need a connection to the database. This is offered by the Sqlite library via the [`IDbConnection`](https://docs.microsoft.com/en-us/dotnet/api/system.data.idbconnection?view=net-6.0) class (2) which represents an open connection to the database. Since we will need a connection for loading the data later on again, we will extract opening a database connection into into another function and call it `private IDbConnection CreateAndOpenDatabase()` (3).
+Next we will look at how to save whenever the hit count is changed, which happens during `OnMouseDown()`. First we need to open a connection to the database. This is offered by the SQLite library via the [`IDbConnection`](https://docs.microsoft.com/en-us/dotnet/api/system.data.idbconnection?view=net-6.0) class (2) which represents an open connection to the database. Since we will need a connection for loading the data later on again, we will extract opening a database connection into another function and call it `private IDbConnection CreateAndOpenDatabase()` (3).
 
-In there we first define a name for our database file. I'll just call it `MyDatabase` for now, accordingly the URI should be `"URI=file:MyDatabase.sqlite"` (4). Then we can create a connection this database using `new SqliteConnection(dbUri)` (5) and open it with `dbConnection.Open()` (6).
+In there we first define a name for our database file. I'll just call it `MyDatabase` for now, accordingly the URI should be `"URI=file:MyDatabase.sqlite"` (4). Then we can create a connection to this database using `new SqliteConnection(dbUri)` (5) and open it with `dbConnection.Open()` (6).
 
 ```cs
 using Mono.Data.Sqlite; // 1
@@ -165,11 +165,11 @@ public class SqliteExampleSimple : MonoBehaviour
 }
 ```
 
-Now we can work with this Sqlite database. Before we can actually add data to the it though, we need to set up a structure. This means, creating and defining tables which is the way most databases are organized. The following screenshot shows the final state we will create in this example.
+Now we can work with this SQLite database. Before we can actually add data to it though, we need to set up a structure. This means, creating and defining tables which is the way most databases are organized. The following screenshot shows the final state we will create in this example.
 
-<img src="images/06_sqlite_tables.png" alt="Sqlite tables"/>
+<img src="images/06_sqlite_tables.png" alt="SQLite tables"/>
 
-When accessing or modifying the database we use [`IDbCommand`](https://docs.microsoft.com/en-us/dotnet/api/system.data.idbcommand?view=net-6.0) (6) which represents and SQL statement that can be executed on a database.
+When accessing or modifying the database we use [`IDbCommand`](https://docs.microsoft.com/en-us/dotnet/api/system.data.idbcommand?view=net-6.0) (6) which represents an SQL statement that can be executed on a database.
 
 Let's create a new table and define some colums using the following command (7):
 
@@ -177,7 +177,7 @@ Let's create a new table and define some colums using the following command (7):
 "CREATE TABLE IF NOT EXISTS HitCountTableSimple (id INTEGER PRIMARY KEY, hits INTEGER )"
 ```
 
-So, what does this statement mean? First we need to state what we want to do, which is `CREATE TABLE IF NOT EXISTS`, then we neede to name this table, which will just be the same as the script we are working on right now: `HitCountTableSimple`.
+So, what does this statement mean? First we need to state what we want to do, which is `CREATE TABLE IF NOT EXISTS`, then we need to name this table, which will just be the same as the script we are working on right now: `HitCountTableSimple`.
 
 Last but not least we need to define how this new table is supposed to look like. This is done by naming all columns as a tuple, like `(id INTEGER PRIMARY KEY, hits INTEGER )`, with the column name (the `key`) being the first variable (`id` and `hits`), followed by the type (`INTEGER`) and any additional attributes like `PRIMARY KEY`.
 
@@ -227,7 +227,7 @@ When you restart the game again, you should now see an initial value for `hitCou
 
 (See `SqliteExampleExtended.cs` in the repository for the finished version.)
 
-In the previous section we have looked at the most simple version of a database example you can think of. One table, one row and only one value we're interested in. Even though a database like Sqlite can deal with any kind of complexity, we want to be able to compare it to the previous parts of this tutorial series and will therefore look at the same `Extended example`, using three hit counts instead of one and using modifier keys to identify them: `Shift` and `Control`.
+In the previous section we have looked at the most simple version of a database example you can think of. One table, one row and only one value we're interested in. Even though a database like SQLite can deal with any kind of complexity, we want to be able to compare it to the previous parts of this tutorial series and will therefore look at the same `Extended example`, using three hit counts instead of one and using modifier keys to identify them: `Shift` and `Control`.
 
 Let's start by creating a new script `SqliteExampleExtended.cs` and attach it to the capsule. Copy over the code from `SqliteExampleSimple` and apply the following changes to it. First, defie the three hit counts:
 
@@ -379,12 +379,12 @@ Now restart the game and try it out!
 
 ## Conclusion
 
-Sqlite is one of the options when it comes to persistence. If you have read the previous tutorials you have noticed that using it might at first seem a bit more complicated than the simple `PlayerPrefs`. You have to learn an additional 'language' to be able to communicate with your database. And due to the nature of SQL no being the easiest format to read, it might seem a bit intimmidating at first.
+SQLite is one of the options when it comes to persistence. If you have read the previous tutorials you have noticed that using it might at first seem a bit more complicated than the simple `PlayerPrefs`. You have to learn an additional 'language' to be able to communicate with your database. And due to the nature of SQL no being the easiest format to read, it might seem a bit intimmidating at first.
 
 But the world of databases offers a lot more than can be shown in a short tutorial like this!
 
-One of the downsides of plain files or `PlayerPrefs` that we've seen was having data in a structured way. Especially when it gets more complicated or relationships between objects should be drawn. We looked at JSON as a way to improve that situation but as soon as we need to change the format and migrate our structure it gets quite complicated. Encryption is another topic that might be important for you - `PlayerPrefs` and `File` are not safe and can easily be read. Those are just some of the areas a database like Sqlite might help you achieve the requirements you have for persisting your data.
+One of the downsides of plain files or `PlayerPrefs` that we've seen was having data in a structured way. Especially when it gets more complicated or relationships between objects should be drawn. We looked at JSON as a way to improve that situation but as soon as we need to change the format and migrate our structure it gets quite complicated. Encryption is another topic that might be important for you - `PlayerPrefs` and `File` are not safe and can easily be read. Those are just some of the areas a database like SQLite might help you achieve the requirements you have for persisting your data.
 
-In the next tutorial we will look at another database, the Realm Unity SDK, which offers similar advantages like Sqlite, while being very easy to use at the same time.
+In the next tutorial we will look at another database, the Realm Unity SDK, which offers similar advantages like SQLite, while being very easy to use at the same time.
 
 Please provide feedback and ask any questions in the [Realm Community Forum](https://www.mongodb.com/community/forums/tags/c/realm/realm-sdks/58/unity).
