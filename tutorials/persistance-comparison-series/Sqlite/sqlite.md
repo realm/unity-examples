@@ -124,7 +124,7 @@ public class SqliteExampleSimple : MonoBehaviour
         dbCommandReadValues.CommandText = "SELECT * FROM HitCountTableSimple"; // 16
         IDataReader dataReader = dbCommandReadValues.ExecuteReader(); // 17
 
-        while (dataReader.Read())
+        while (dataReader.Read()) // 18
         {
             // The `id` has index 0, our `hits` have the index 1.
             hitCount = dataReader.GetInt32(1); // 19
@@ -179,7 +179,7 @@ Let's create a new table and define some colums using the following command (7):
 
 So, what does this statement mean? First we need to state what we want to do, which is `CREATE TABLE IF NOT EXISTS`, then we need to name this table, which will just be the same as the script we are working on right now: `HitCountTableSimple`.
 
-Last but not least we need to define how this new table is supposed to look like. This is done by naming all columns as a tuple, like `(id INTEGER PRIMARY KEY, hits INTEGER )`, with the column name (the `key`) being the first variable (`id` and `hits`), followed by the type (`INTEGER`) and any additional attributes like `PRIMARY KEY`.
+Last but not least we need to define how this new table is supposed to look like. This is done by naming all columns as a tuple: `(id INTEGER PRIMARY KEY, hits INTEGER )`. The first one defines a column `id` of type `INTEGER` which is our `PRIMARY KEY`. The second one defines a column `hits` of type `INTEGER`.
 
 After assigning this statement as the `CommandText` we need to call `ExecuteReader()` (8) on `dbCommandCreateTable` to run it.
 
@@ -189,7 +189,7 @@ Now back to `OnMouseClicked()`. With the `dbConnection` created we can now go ah
 "INSERT OR REPLACE INTO HitCountTableSimple (id, hits) VALUES (0, " + hitCount + ")"
 ```
 
-Let's decypher this one too: `INSERT OR REPLACE INTO` adds a new variable to a table or updates it, if it already exists. Next it the table name that we want to insert into, `HitCountTableSimple`. This is followed by a tuple of columns (using their key) that we would like to change, `(id, hits)`. The statement `VALUES (0, " + hitCount + ")` then defines values that should be inserted, also as a tuple. In this case we just choose `0` for the key and use whatever the current `hitCount` is as the value.
+Let's decypher this one too: `INSERT OR REPLACE INTO` adds a new variable to a table or updates it, if it already exists. Next is the table name that we want to insert into, `HitCountTableSimple`. This is followed by a tuple of columns that we would like to change, `(id, hits)`. The statement `VALUES (0, " + hitCount + ")` then defines values that should be inserted, also as a tuple. In this case we just choose `0` for the key and use whatever the current `hitCount` is as the value.
 
 Opposed to creating the table we execute this command calling `ExecuteNonQuery()` (11) on it.
 
@@ -197,7 +197,7 @@ The difference can be defined as follows:
 
 > ExecuteReader is used for any result set with multiple rows/columns (e.g., SELECT col1, col2 from sometable ). ExecuteNonQuery is typically used for SQL statements without results (e.g., UPDATE, INSERT, etc.).
 
-ALl that's left to do is properly `Close()` (12) the database.
+All that's left to do, is to properly `Close()` (12) the database.
 
 How can we actually verify that this worked out before we continue on to reading the values from the database again? Well, the easiest way would be to just look into the database. There are many tools out there to achieve this, one of the open source options would be [https://sqlitebrowser.org/](https://sqlitebrowser.org/).
 
@@ -213,11 +213,11 @@ The next time we start the game, we want to load this hit count from the databas
 "SELECT * FROM HitCountTableSimple"
 ```
 
-In this case, `SELECT` stands for `read the following values`, followed by a `*` which indicates to read all data. The keyword `FROM` than specifie the table that should be read from which is again `HitCountTableSimple`. Finally we execute this command using `ExecuteReader()` (17) since we expect data back. This data is saved in an [`IDataReader`](https://docs.microsoft.com/en-us/dotnet/api/system.data.idatareader?view=net-6.0), from the documentation:
+In this case, `SELECT` stands for `read the following values`, followed by a `*` which indicates to read all the data. The keyword `FROM` then specifies the table that should be read from which is again `HitCountTableSimple`. Finally we execute this command using `ExecuteReader()` (17) since we expect data back. This data is saved in an [`IDataReader`](https://docs.microsoft.com/en-us/dotnet/api/system.data.idatareader?view=net-6.0), from the documentation:
 
 > Provides a means of reading one or more forward-only streams of result sets obtained by executing a command at a data source, and is implemented by .NET data providers that access relational databases.
 
-The way this data is read is row by row. Each time we call `dataReader.Read()` (18) we read another row from the table. Since we know there is only one row in the table we can just assign the `value` of that row to the `hitCount`. The `value` is of type `INTEGER` so we need to use [`GetInt32(1)`](https://docs.microsoft.com/en-us/dotnet/api/system.data.idatarecord.getint32?view=net-6.0) to read it and specify the index of the field we want to read as a parameter, `id` being `0` and `value` being `1`.
+`IDataReader` addresses its content in an index fashion, where the ordering matches that one of the columns in the SQL table. So in our case, `id` has index 0, and `hitCount` has index 1. The way this data is read is row by row. Each time we call `dataReader.Read()` (18) we read another row from the table. Since we know there is only one row in the table we can just assign the `value` of that row to the `hitCount` using its index 1. The `value` is of type `INTEGER` so we need to use [`GetInt32(1)`](https://docs.microsoft.com/en-us/dotnet/api/system.data.idatarecord.getint32?view=net-6.0) to read it and specify the index of the field we want to read as a parameter, `id` being `0` and `value` being `1`.
 
 As before, in the end we want to properly `Close()` the database (20).
 
@@ -370,7 +370,7 @@ void Start()
 }
 ```
 
-The first part works basically unchanged by creating a `IDbConnection` (1) and a `IDbCommand` (2) and then read all rows again with `SELECT *` (3) but this time from `HitCountTableExtended`, finished by actually executing the command with `ExecuteReader()`
+The first part works basically unchanged by creating a `IDbConnection` (1) and a `IDbCommand` (2) and then reading all rows again with `SELECT *` (3) but this time from `HitCountTableExtended`, finished by actually executing the command with `ExecuteReader()`
 (4).
 
 For the next part we now need to read each row (5) and then check which `KeyCode` it belongs to. We grab the `id` from index `0` (6) and the `hits` from index `1` (7) as before. Then we check the `id` against the `KeyCode` (8) and assign it to the corresponding `hitCount` (9).
@@ -379,12 +379,10 @@ Now restart the game and try it out!
 
 ## Conclusion
 
-SQLite is one of the options when it comes to persistence. If you have read the previous tutorials you have noticed that using it might at first seem a bit more complicated than the simple `PlayerPrefs`. You have to learn an additional 'language' to be able to communicate with your database. And due to the nature of SQL no being the easiest format to read, it might seem a bit intimmidating at first.
-
-But the world of databases offers a lot more than can be shown in a short tutorial like this!
+SQLite is one of the options when it comes to persistence. If you have read the previous tutorials you have noticed that using it might at first seem a bit more complicated than the simple `PlayerPrefs`. You have to learn an additional 'language' to be able to communicate with your database. And due to the nature of SQL no being the easiest format to read, it might seem a bit intimidating at first. But the world of databases offers a lot more than can be shown in a short tutorial like this!
 
 One of the downsides of plain files or `PlayerPrefs` that we've seen was having data in a structured way. Especially when it gets more complicated or relationships between objects should be drawn. We looked at JSON as a way to improve that situation but as soon as we need to change the format and migrate our structure it gets quite complicated. Encryption is another topic that might be important for you - `PlayerPrefs` and `File` are not safe and can easily be read. Those are just some of the areas a database like SQLite might help you achieve the requirements you have for persisting your data.
 
-In the next tutorial we will look at another database, the Realm Unity SDK, which offers similar advantages like SQLite, while being very easy to use at the same time.
+In the next tutorial we will look at another database, the Realm Unity SDK, which offers similar advantages to SQLite, while being very easy to use at the same time.
 
 Please provide feedback and ask any questions in the [Realm Community Forum](https://www.mongodb.com/community/forums/tags/c/realm/realm-sdks/58/unity).

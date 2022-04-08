@@ -76,4 +76,5 @@ BinaryReaderWriterExample*
 MyDatabase.sqlite
 
 .vscode
+.vsconfig
 
