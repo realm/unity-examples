@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44658786, g: 0.49642265, b: 0.57482505, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -320,11 +320,10 @@ GameObject:
   - component: {fileID: 1910535693}
   - component: {fileID: 1910535692}
   - component: {fileID: 1910535691}
-  - component: {fileID: 1910535697}
-  - component: {fileID: 1910535698}
-  - component: {fileID: 1910535699}
   - component: {fileID: 1910535700}
   - component: {fileID: 1910535701}
+  - component: {fileID: 1910535703}
+  - component: {fileID: 1910535702}
   m_Layer: 0
   m_Name: Capsule
   m_TagString: Untagged
@@ -510,49 +509,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitCount: 0
---- !u!114 &1910535697
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1910535675}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8f70685008781734a93714f77d4850f6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hitCount: 0
---- !u!114 &1910535698
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1910535675}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de525b8bb6b882596a40e2b80dc87517, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hitCountUnmodified: 0
-  hitCountShift: 0
-  hitCountControl: 0
---- !u!114 &1910535699
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1910535675}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a555cd069f9fe71b480de8a49c4e2778, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hitCountUnmodified: 0
-  hitCountShift: 0
-  hitCountControl: 0
 --- !u!114 &1910535700
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -581,3 +537,31 @@ MonoBehaviour:
   hitCountUnmodified: 0
   hitCountShift: 0
   hitCountControl: 0
+--- !u!114 &1910535702
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1910535675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f38c3c3a463184325b98dc44821b33b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitCountUnmodified: 0
+  hitCountShift: 0
+  hitCountControl: 0
+--- !u!114 &1910535703
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1910535675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ec2a8775bad04b229d4578624360ede, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitCounter: 0
